@@ -1,4 +1,4 @@
-package com.example.mobile
+package com.laknabil.bitescan
 
 import io.flutter.embedding.android.FlutterActivity
 

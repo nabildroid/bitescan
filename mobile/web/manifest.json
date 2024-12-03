@@ -1,6 +1,6 @@
 {
-    "name": "mobile",
-    "short_name": "mobile",
+    "name": "bitescan",
+    "short_name": "bitescan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
