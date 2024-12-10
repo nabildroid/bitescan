@@ -1,33 +1,58 @@
+import 'dart:io';
+
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitescan/models/goal.dart';
-import 'package:bitescan/screens/home_screen.dart';
-import 'package:bitescan/screens/onboarding1.dart';
-import 'package:bitescan/screens/onboarding_flow.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:logger/logger.dart';
+
+import 'config/custom_router.dart';
+import 'config/locator.dart';
 
 abstract class Storage {
   static final goalId = ValueNotifier("");
   static final goal = ValueNotifier<Goal?>(null);
 }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  await setUpLocator();
+  await initializeDateFormatting(Platform.localeName);
+
+  EquatableConfig.stringify = true;
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    locator.get<Logger>().e(
+          details.summary,
+          error: details.exceptionAsString(),
+          stackTrace: details.stack,
+        );
+  };
+
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+
+  runApp(BitescanApp(
+    savedThemeMode: savedThemeMode,
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BitescanApp extends StatelessWidget {
+  final AdaptiveThemeMode? savedThemeMode;
+
+  const BitescanApp({super.key, this.savedThemeMode});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      title: 'BitScan',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF673AB7)),
         useMaterial3: true,
       ),
-      home: OnboardingFlow(),
       debugShowCheckedModeBanner: false,
+      routerConfig: router,
     );
   }
 }

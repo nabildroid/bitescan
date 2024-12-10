@@ -1,11 +1,11 @@
 import 'package:bitescan/models/goal.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
+import '../../../main.dart';
 
-class GoalDescription extends StatelessWidget {
+class GoalDetailSheet extends StatelessWidget {
   final Goal goal;
-  const GoalDescription({
+  const GoalDetailSheet({
     super.key,
     required this.goal,
   });

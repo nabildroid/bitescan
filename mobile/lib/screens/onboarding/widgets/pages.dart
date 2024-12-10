@@ -1,116 +1,7 @@
-import 'package:bitescan/main.dart';
-import 'package:bitescan/models/goal.dart';
-import 'package:bitescan/screens/home_screen.dart';
-import 'package:bitescan/screens/scan_test.dart';
-import 'package:bitescan/widgets/onboarding_radio_options.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingFlow extends StatefulWidget {
-  const OnboardingFlow({super.key});
-
-  @override
-  State<OnboardingFlow> createState() => _OnboardingFlowState();
-}
-
-class _OnboardingFlowState extends State<OnboardingFlow> {
-  final pageController = PageController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AnimatedBuilder(
-            animation: pageController,
-            builder: (context, _) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(
-                    4,
-                    (i) => Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 350),
-                          width: (pageController.page?.round() ?? 0) == i
-                              ? 20
-                              : 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: (pageController.page?.round() ?? 0) == i
-                                ? Colors.black87
-                                : Colors.black38,
-                          ),
-                        ))),
-              );
-            }),
-        centerTitle: true,
-        leading: AnimatedBuilder(
-            animation: pageController,
-            builder: (context, _) {
-              if ((pageController.page?.round() ?? 0) == 0) {
-                return SizedBox.shrink();
-              }
-
-              return Center(
-                child: IconButton.outlined(
-                  style: IconButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: () {
-                    pageController.previousPage(
-                        duration: Duration(milliseconds: 350),
-                        curve: Curves.easeInOutCirc);
-                  },
-                  icon: Icon(Icons.arrow_back),
-                ),
-              );
-            }),
-      ),
-      body: SizedBox.expand(
-        child: PageView(
-            controller: pageController,
-            allowImplicitScrolling: false,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              AdsPage(
-                next: () {
-                  pageController.nextPage(
-                      duration: Duration(milliseconds: 350),
-                      curve: Curves.easeInOutCirc);
-                },
-              ),
-              AgeGroupPage(
-                next: () {
-                  pageController.nextPage(
-                      duration: Duration(milliseconds: 350),
-                      curve: Curves.easeInOutCirc);
-                },
-              ),
-              GenderGroupPage(
-                next: () {
-                  pageController.nextPage(
-                      duration: Duration(milliseconds: 350),
-                      curve: Curves.easeInOutCirc);
-                },
-              ),
-              GoalGroupPage(next: () {
-                final goal = goalDB.first;
-                Storage.goal.value = goal;
-                Storage.goalId.value = goal.id;
-
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (c) {
-                    return HomeScreen(firstTime: true);
-                  }),
-                );
-              }),
-            ]),
-      ),
-    );
-  }
-}
+import 'onboarding_radio_options.dart';
 
 class AgeGroupPage extends StatelessWidget {
   final VoidCallback next;
@@ -259,7 +150,8 @@ class AdsPage extends StatelessWidget {
         children: [
           SizedBox(height: 28),
           CircleAvatar(
-            backgroundImage: NetworkImage("https://github.com/nabildroid.png"),
+            backgroundImage:
+                CachedNetworkImageProvider("https://github.com/nabildroid.png"),
             radius: 36,
           ),
           SizedBox(height: 28),
@@ -297,30 +189,6 @@ class AdsPage extends StatelessWidget {
           SizedBox(height: 42),
         ],
       ),
-    );
-  }
-}
-
-class NameDialog extends StatelessWidget {
-  const NameDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog.adaptive(
-      title: Text("Your Name"),
-      icon: Icon(Icons.timer_3),
-      actionsAlignment: MainAxisAlignment.center,
-      content: TextField(
-        autofocus: true,
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text("Save"),
-        )
-      ],
     );
   }
 }

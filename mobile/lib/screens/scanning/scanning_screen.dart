@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:bitescan/screens/scanning_result.dart';
+import 'package:bitescan/config/custom_router.dart';
+import 'package:bitescan/config/paths.dart';
+import 'package:bitescan/screens/scanning_result/scanning_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ScanTest extends StatefulWidget {
-  ScanTest({super.key});
+class ScanningScreen extends StatefulWidget {
+  ScanningScreen({super.key});
 
   static get title {
     const examples = [
@@ -24,10 +27,10 @@ class ScanTest extends StatefulWidget {
   }
 
   @override
-  State<ScanTest> createState() => _ScanTestState();
+  State<ScanningScreen> createState() => _ScanningScreenState();
 }
 
-class _ScanTestState extends State<ScanTest> {
+class _ScanningScreenState extends State<ScanningScreen> {
   final MobileScannerController controller = MobileScannerController();
 
   @override
@@ -56,15 +59,7 @@ class _ScanTestState extends State<ScanTest> {
   }
 
   void openResult(String value) {
-    Navigator.of(context)
-        .push(DialogRoute(
-      context: context,
-      useSafeArea: false,
-      builder: (_) => ScanningResult(
-        code: value,
-      ),
-    ))
-        .then((_) {
+    context.push(Paths.result.link(value)).then((_) {
       if (!mounted) return;
       try {
         controller.start();
@@ -86,7 +81,7 @@ class _ScanTestState extends State<ScanTest> {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: FittedBox(child: Text(ScanTest.title)),
+        title: FittedBox(child: Text(ScanningScreen.title)),
         backgroundColor: Colors.transparent,
       ),
       backgroundColor: Theme.of(context).primaryColor,

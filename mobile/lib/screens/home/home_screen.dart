@@ -1,9 +1,11 @@
+import 'package:bitescan/config/paths.dart';
 import 'package:bitescan/main.dart';
 import 'package:bitescan/models/goal.dart';
-import 'package:bitescan/screens/goal_description.dart';
-import 'package:bitescan/screens/onboarding_flow.dart';
-import 'package:bitescan/screens/scan_test.dart';
+import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
+import 'package:bitescan/screens/home/widgets/name_dialog.dart';
+import 'package:bitescan/screens/scanning/scanning_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool firstTime;
@@ -24,13 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
     if (widget.firstTime) {
       Future.delayed(Duration(milliseconds: 500)).then((_) {
         if (mounted == false) return;
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => ScanTest()))
+
+        context
+            .push(Paths.scan.landing)
             .then((_) => Future.delayed(Duration(seconds: 3)))
             .then((_) {
           if (mounted == false) return;
           Navigator.of(context).push(
-              DialogRoute(context: context, builder: (_) => NameDialog()));
+            DialogRoute(context: context, builder: (_) => NameDialog()),
+          );
         });
       });
     }
@@ -234,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                           await Scaffold.of(context)
                                               .showBottomSheet(
-                                                (_) => GoalDescription(
+                                                (_) => GoalDetailSheet(
                                                   goal: item,
                                                 ),
                                                 elevation: 8,
@@ -265,8 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: !visibleGoalDetails
               ? FloatingActionButton.extended(
                   onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => ScanTest()));
+                    context.push(Paths.scan.landing);
                   },
                   label: Text("Scan the Food"),
                   icon: Icon(Icons.document_scanner_outlined),
