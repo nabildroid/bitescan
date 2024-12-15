@@ -1,6 +1,7 @@
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/data/data_state.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
+import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
 import 'package:bitescan/main.dart';
 import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
@@ -22,6 +23,8 @@ class ScanningResultScreen extends StatefulWidget {
 
 class _ScanningResultScreenState extends State<ScanningResultScreen> {
   bool loading = true;
+
+  final viewedSubject = BehaviorSubject<Food>();
 
   final PageController pageController = PageController();
   Food? product;
@@ -49,7 +52,22 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
   @override
   void initState() {
     super.initState();
+
+    context.read<ScanningCubit>().dispatchScannedFood(widget.code);
     prepareTargetFood();
+
+    viewedSubject.debounceTime(Duration(seconds: 3)).listen((data) {
+      if (!mounted) return;
+
+      context.read<ScanningCubit>().dispatchViewedFood(data.code);
+    });
+
+    pageController.addListener(() {
+      final page = pageController.page?.round() ?? 0;
+      if (page == 0) return;
+
+      viewedSubject.add(similar[page - 1]);
+    });
   }
 
   void prepareTargetFood() {
@@ -79,6 +97,12 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
         return;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    viewedSubject.close();
   }
 
   @override

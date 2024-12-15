@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   mobile_scanner:
-
+  flutter_local_notifications:
   wakelock_plus: ^1.2.5 # screen always on for 5 min when Scanning screen, reseted on each scan
   workmanager: ^0.5.1 # contantly checking new data in background, and scheduling scanning checkout
   shared_preferences: ^2.2.3
@@ -54,6 +54,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  timezone:
 
 dev_dependencies:
   flutter_test:

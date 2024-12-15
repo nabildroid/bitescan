@@ -20,3 +20,16 @@ double smoothValue(List<double> data, double target) {
   if (smoothedTarget.isNaN) return 50;
   return smoothedTarget;
 }
+
+DateTime dateHoursFromNow(int hours) {
+  final now = DateTime.now();
+
+  // Adjust the date based on whether the target hour has passed today
+  return DateTime(
+    now.year,
+    now.month,
+    now.day +
+        (now.hour >= hours ? 1 : 0), // Add 1 day if the target is tomorrow
+    hours,
+  );
+}

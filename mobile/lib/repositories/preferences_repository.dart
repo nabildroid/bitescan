@@ -17,12 +17,18 @@ class PreferenceRepository with Loggable {
   Future<bool?> getBool(String key) => _prefs.then(
         (SharedPreferences prefs) => prefs.getBool(globalPrefix + key),
       );
+
+  Future<String?> getString(String key) => _prefs.then(
+        (SharedPreferences prefs) => prefs.getString(globalPrefix + key),
+      );
+
   Future<int?> getInt(String key) => _prefs.then(
         (SharedPreferences prefs) => prefs.getInt(globalPrefix + key),
       );
   Future<double?> getDouble(String key) => _prefs.then(
         (SharedPreferences prefs) => prefs.getDouble(globalPrefix + key),
       );
+
   //ignore: avoid_positional_boolean_parameters
   void setBool(String key, bool val) => _prefs.then(
         (SharedPreferences prefs) => prefs.setBool(globalPrefix + key, val),
@@ -32,6 +38,13 @@ class PreferenceRepository with Loggable {
       );
   void setDouble(String key, double val) => _prefs.then(
         (SharedPreferences prefs) => prefs.setDouble(globalPrefix + key, val),
+      );
+
+  void setString(String key, String val) => _prefs.then(
+        (SharedPreferences prefs) => prefs.setString(globalPrefix + key, val),
+      );
+  void remove(String key) => _prefs.then(
+        (SharedPreferences prefs) => prefs.remove(globalPrefix + key),
       );
 
   Future<bool> get isFirstTime async {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -5,6 +6,9 @@ import 'package:bitescan/config/custom_router.dart';
 import 'package:bitescan/config/paths.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/data/data_state.dart';
+import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
+import 'package:bitescan/extentions/loggable.dart';
+import 'package:bitescan/models/food.dart';
 import 'package:bitescan/screens/scanning_result/scanning_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class ScanningScreen extends StatefulWidget {
   ScanningScreen({super.key});
@@ -33,12 +39,34 @@ class ScanningScreen extends StatefulWidget {
   State<ScanningScreen> createState() => _ScanningScreenState();
 }
 
-class _ScanningScreenState extends State<ScanningScreen> {
+class _ScanningScreenState extends State<ScanningScreen>
+    with WidgetsBindingObserver, Loggable {
   final MobileScannerController controller = MobileScannerController();
+
+  late Timer _timer;
+
+  final wakeLockSubject = BehaviorSubject<void>();
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+
+    startTimer();
+
+    context.read<ScanningCubit>().startShoppingSession();
+
+    wakeLockSubject.listen((_) {
+      logTrace("-> Enabling Wakelock ");
+      WakelockPlus.enable();
+    });
+    wakeLockSubject.debounceTime(Duration(minutes: 5)).listen((data) {
+      if (!mounted) return;
+
+      WakelockPlus.disable();
+      logTrace("-> Disabling Wakelock ");
+    });
   }
 
   void manuelScan() async {
@@ -62,6 +90,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   void openResult(String value) {
+    wakeLockSubject.add(null);
     context.push(Paths.result.link(value)).then((_) {
       if (!mounted) return;
       try {
@@ -74,9 +103,38 @@ class _ScanningScreenState extends State<ScanningScreen> {
   void dispose() async {
     super.dispose();
 
+    _timer.cancel();
+
+    wakeLockSubject.close();
+    WidgetsBinding.instance.removeObserver(this);
+
     try {
       await controller.dispose();
+      await WakelockPlus.disable();
     } catch (e) {}
+  }
+
+  void startTimer() {
+    const duration = Duration(seconds: 1);
+    _timer = Timer.periodic(duration, (timer) {
+      context.read<ScanningCubit>().dispatchShoppingSecond();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        startTimer();
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+        _timer.cancel();
+        break;
+    }
   }
 
   @override
@@ -206,6 +264,9 @@ class _ScanningScreenState extends State<ScanningScreen> {
       ),
     );
   }
+
+  @override
+  String get logIdentifier => "ScanningScreen-State";
 }
 
 class ScanCameraFrameClipper extends CustomClipper<Path> {

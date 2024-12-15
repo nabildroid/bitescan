@@ -1,5 +1,6 @@
 import 'package:bitescan/repositories/preferences_repository.dart';
 import 'package:bitescan/repositories/remote_data_repository.dart';
+import 'package:bitescan/services/local_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
@@ -10,6 +11,7 @@ Future<void> setUpLocator() async {
   locator.registerSingleton(Logger());
   locator.registerSingleton(PreferenceRepository());
   locator.registerSingleton(RemoteDataRepository());
+  locator.registerSingleton(LocalNotificationService());
 
   locator.registerSingleton(RouteObserver<ModalRoute<dynamic>>());
 }

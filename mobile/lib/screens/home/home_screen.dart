@@ -6,6 +6,7 @@ import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
+import 'package:bitescan/screens/shopping_confirmation/shopping_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -83,9 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             actions: [
-              CircleAvatar(
-                backgroundImage:
-                    NetworkImage("https://github.com/nabildroid.png"),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ShoppingConfirmationScreen(),
+                  ));
+                },
+                child: CircleAvatar(
+                  backgroundImage:
+                      NetworkImage("https://github.com/nabildroid.png"),
+                ),
               ),
               SizedBox(width: 8),
             ],
