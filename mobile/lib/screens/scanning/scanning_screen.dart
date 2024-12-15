@@ -3,9 +3,12 @@ import 'dart:math';
 
 import 'package:bitescan/config/custom_router.dart';
 import 'package:bitescan/config/paths.dart';
+import 'package:bitescan/cubits/data/data_cubit.dart';
+import 'package:bitescan/cubits/data/data_state.dart';
 import 'package:bitescan/screens/scanning_result/scanning_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
@@ -109,17 +112,20 @@ class _ScanningScreenState extends State<ScanningScreen> {
                       Positioned.fill(
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
-                          child: MobileScanner(
-                            controller: controller,
-                            onDetect: (BarcodeCapture capture) {
-                              final List<Barcode> barcodes = capture.barcodes;
+                          child: Platform.isAndroid
+                              ? MobileScanner(
+                                  controller: controller,
+                                  onDetect: (BarcodeCapture capture) {
+                                    final List<Barcode> barcodes =
+                                        capture.barcodes;
 
-                              if (barcodes.first.rawValue != null) {
-                                openResult(barcodes.first.rawValue!);
-                                controller.stop();
-                              }
-                            },
-                          ),
+                                    if (barcodes.first.rawValue != null) {
+                                      openResult(barcodes.first.rawValue!);
+                                      controller.stop();
+                                    }
+                                  },
+                                )
+                              : SizedBox.shrink(),
                         ),
                       ),
                       ClipPath(
@@ -165,33 +171,33 @@ class _ScanningScreenState extends State<ScanningScreen> {
                         .titleMedium!
                         .copyWith(color: Theme.of(context).primaryColor),
                   ),
-                  Expanded(
-                      child: ListView.separated(
-                    itemBuilder: (_, __) => ListTile(
-                      trailing: IconButton(
-                        onPressed: () {
-                          manuelScan();
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (_) => ScanningResult()));
-                        },
-                        icon: Icon(Icons.add),
-                      ),
-                      leading: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(.3),
-                          borderRadius: BorderRadius.circular(8),
+                  BlocBuilder<DataCubit, DataState>(builder: (context, state) {
+                    return Expanded(
+                        child: ListView.separated(
+                      itemBuilder: (_, index) => ListTile(
+                        trailing: IconButton(
+                          onPressed: () {
+                            openResult(state.foods[index].code);
+                          },
+                          icon: Icon(Icons.real_estate_agent_rounded),
                         ),
-                        width: 40,
-                        height: 40,
-                        padding: EdgeInsets.all(8),
-                        child:
-                            Image.network("https://github.com/nabildroid.png"),
+                        leading: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          width: 40,
+                          height: 40,
+                          padding: EdgeInsets.all(8),
+                          child: Image.network(state.foods[index].image),
+                        ),
+                        title: Text(state.foods[index].name),
                       ),
-                      title: Text("Water Saida"),
-                    ),
-                    separatorBuilder: (_, __) => SizedBox(height: 8),
-                    itemCount: 20,
-                  ))
+                      separatorBuilder: (_, __) => SizedBox(height: 8),
+                      itemCount: state.foods.length,
+                    ));
+                  })
                 ],
               ),
             ),

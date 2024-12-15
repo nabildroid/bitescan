@@ -1,10 +1,11 @@
+import 'package:bitescan/models/goal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'onboarding_radio_options.dart';
 
 class AgeGroupPage extends StatelessWidget {
-  final VoidCallback next;
+  final Function(int age) next;
   const AgeGroupPage({super.key, required this.next});
 
   @override
@@ -30,9 +31,7 @@ class AgeGroupPage extends StatelessWidget {
           SizedBox(height: 16),
           OnboardingRadioOptions<int>(
             next: (val) {
-              print((val as int).remainder(15));
-
-              next();
+              next(val);
             },
             options: const [
               MapEntry(MapEntry("30 - 60", "older than 30 years old"), 30),
@@ -48,7 +47,7 @@ class AgeGroupPage extends StatelessWidget {
 }
 
 class GenderGroupPage extends StatelessWidget {
-  final VoidCallback next;
+  final Function(String val) next;
   const GenderGroupPage({super.key, required this.next});
 
   @override
@@ -76,7 +75,7 @@ class GenderGroupPage extends StatelessWidget {
             next: (val) {
               print((val as String).toUpperCase());
 
-              next();
+              next(val);
             },
             options: const [
               MapEntry(MapEntry("Male", "goals tolerated for a man"), "man"),
@@ -91,8 +90,14 @@ class GenderGroupPage extends StatelessWidget {
 }
 
 class GoalGroupPage extends StatelessWidget {
-  final VoidCallback next;
-  const GoalGroupPage({super.key, required this.next});
+  final Function(Goal goal) next;
+
+  final List<Goal> goals;
+  const GoalGroupPage({
+    super.key,
+    required this.next,
+    required this.goals,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -115,22 +120,13 @@ class GoalGroupPage extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           SizedBox(height: 16),
-          OnboardingRadioOptions(
-            next: (val) {
-              print((val as String).toUpperCase());
-
-              next();
-            },
-            options: const [
-              MapEntry(
-                  MapEntry("More Energy", "goals tolerated for a man"), "man"),
-              MapEntry(MapEntry("More Focus", "goals tolerated for a man"),
-                  "female"),
-              MapEntry(
-                  MapEntry("Sport Perfomance", "goals tolerated for a man"),
-                  "female"),
-            ],
-          ),
+          OnboardingRadioOptions<Goal>(
+              next: (val) {
+                next(val as Goal);
+              },
+              options: goals
+                  .map((e) => MapEntry(MapEntry(e.name, e.longName), e))
+                  .toList()),
         ],
       ),
     );

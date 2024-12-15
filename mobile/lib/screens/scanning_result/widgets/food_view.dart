@@ -10,27 +10,29 @@ class FoodView extends StatelessWidget {
   final Food? food;
   final List<Food> similar;
   final bool loading;
+  final Goal? goal;
   final PageController pageController;
   const FoodView({
     super.key,
     this.food,
+    this.goal,
     required this.similar,
     required this.loading,
     required this.pageController,
   });
 
   int getScore(Food evaluatedFood) {
-    if (Storage.goal.value == null || food == null) return 0;
+    if (goal == null || food == null) return 0;
     return smoothValue(
-      similar.map((e) => Goal.rank(e, Storage.goal.value!)).toList(),
-      Goal.rank(evaluatedFood, Storage.goal.value!),
+      similar.map((e) => Goal.rank(e, goal!)).toList(),
+      Goal.rank(evaluatedFood, goal!),
     ).round();
   }
 
   @override
   Widget build(BuildContext context) {
     double score = 120;
-    if (food != null && Storage.goal.value != null) {
+    if (food != null && goal != null) {
       score = getScore(food!) + 0.0;
     }
 
@@ -129,7 +131,7 @@ class FoodView extends StatelessWidget {
                             )),
                             child: FittedBox(
                               child: Text(
-                                "${score < 20 ? "Bad" : score < 70 ? "Ok" : "Good"} For ${Storage.goal.value?.name}",
+                                "${score < 20 ? "Bad" : score < 70 ? "Ok" : "Good"} For ${goal?.name}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,

@@ -1,10 +1,11 @@
 import 'package:bitescan/config/custom_router.dart';
 import 'package:bitescan/config/paths.dart';
-import 'package:bitescan/main.dart';
-import 'package:bitescan/models/goal.dart';
-import 'package:bitescan/screens/home/home_screen.dart';
-import 'package:bitescan/screens/onboarding/widgets/onboarding_radio_options.dart';
+import 'package:bitescan/cubits/data/data_cubit.dart';
+import 'package:bitescan/cubits/data/data_state.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'widgets/pages.dart';
@@ -17,7 +18,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final pageController = PageController();
+  final pageController = PageController(initialPage: 3);
 
   @override
   Widget build(BuildContext context) {
@@ -86,25 +87,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
               AgeGroupPage(
-                next: () {
+                next: (val) {
+                  context.read<OnboardingCubit>().setAgeGroup(val);
                   pageController.nextPage(
                       duration: Duration(milliseconds: 350),
                       curve: Curves.easeInOutCirc);
                 },
               ),
               GenderGroupPage(
-                next: () {
+                next: (val) {
+                  context.read<OnboardingCubit>().setGender(val);
                   pageController.nextPage(
                       duration: Duration(milliseconds: 350),
                       curve: Curves.easeInOutCirc);
                 },
               ),
-              GoalGroupPage(next: () {
-                final goal = goalDB.first;
-                Storage.goal.value = goal;
-                Storage.goalId.value = goal.id;
-
-                context.replace(Paths.home.firstTime);
+              BlocBuilder<OnboardingCubit, OnboardingState>(
+                  builder: (context, onboardingState) {
+                return BlocBuilder<DataCubit, DataState>(
+                    builder: (context, dataState) {
+                  return GoalGroupPage(
+                      goals: context
+                          .read<OnboardingCubit>()
+                          .getSuggestion(dataState.goals),
+                      next: (goal) {
+                        context.read<OnboardingCubit>().setGoal(goal);
+                        context.replace(Paths.home.firstTime);
+                      });
+                });
               }),
             ]),
       ),

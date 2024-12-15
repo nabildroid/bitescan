@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:bitescan/config/paths.dart';
-import 'package:bitescan/main.dart';
+import 'package:bitescan/cubits/data/data_cubit.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
-import 'package:bitescan/screens/home/widgets/name_dialog.dart';
-import 'package:bitescan/screens/scanning/scanning_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool firstTime;
-  HomeScreen({super.key, this.firstTime = false});
+  const HomeScreen({super.key, this.firstTime = false});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = PageController(
-    initialPage: (goalDB.length / 2).round(),
     viewportFraction: .5,
   );
 
@@ -32,20 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
             .then((_) => Future.delayed(Duration(seconds: 3)))
             .then((_) {
           if (mounted == false) return;
-          Navigator.of(context).push(
-            DialogRoute(context: context, builder: (_) => NameDialog()),
-          );
+          // Navigator.of(context).push(
+          //   DialogRoute(context: context, builder: (_) => NameDialog()),
+          // );
         });
       });
     }
-
-    Storage.goalId.addListener(() {
-      try {
-        final index =
-            goalDB.indexWhere((test) => test.id == Storage.goalId.value);
-        controller.jumpToPage(index);
-      } catch (_) {}
-    });
 
     super.initState();
   }
@@ -77,17 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "Walcome Nabil Lakrib",
                 ),
-                ValueListenableBuilder(
-                    valueListenable: Storage.goalId,
-                    builder: (context, val, _) {
-                      if (val.isEmpty) {
-                        return Text("Let's make food better");
-                      } else {
-                        final target =
-                            goalDB.firstWhere((test) => test.id == val);
-                        return Text("Let's work on ${target.name}");
-                      }
-                    }),
+                BlocBuilder<OnboardingCubit, OnboardingState>(
+                    builder: (context, state) {
+                  if (state.initalGoal == null) {
+                    return Text("Let's make food better");
+                  } else {
+                    return Text("Let's work on ${state.initalGoal!.name}");
+                  }
+                }),
               ],
             ),
             actions: [
@@ -180,87 +172,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PageView(
-                    scrollDirection: Axis.horizontal,
-                    controller: controller,
-                    children: List.generate(
-                      goalDB.length,
-                      (i) => AnimatedBuilder(
-                          animation: controller,
-                          builder: (context, _) {
-                            final item = goalDB[i % goalDB.length];
-                            final indice = i -
-                                (controller.position.haveDimensions
-                                        ? controller.page!
-                                        : goalDB.length / 2 + 0.1)
-                                    .clamp(i - 0.5, i + 0.5);
-                            final val = 1 - indice.abs();
-
-                            return Opacity(
-                              opacity: val,
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: AspectRatio(
-                                  aspectRatio: 5.5 / 7,
-                                  child: AnimatedContainer(
-                                    key: ValueKey(i),
-                                    duration: Duration(milliseconds: 250),
-                                    transformAlignment: Alignment.center,
-                                    transform: Transform.rotate(
-                                          angle: val < 0.8
-                                              ? (indice < 0 ? -1 : 1) * 0.08
-                                              : 0,
-                                        ).transform *
-                                        Transform.scale(
-                                          scale: val < 0.8 ? 0.9 : 1,
-                                        ).transform,
-                                    child: Container(
-                                      margin: EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          if (val > 0.5)
-                                            BoxShadow(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.3),
-                                              blurRadius: 12,
-                                              spreadRadius: 5,
-                                            ),
-                                        ],
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          setState(() {
-                                            visibleGoalDetails = true;
-                                          });
-
-                                          await Scaffold.of(context)
-                                              .showBottomSheet(
-                                                (_) => GoalDetailSheet(
-                                                  goal: item,
-                                                ),
-                                                elevation: 8,
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 32, 48, 54),
-                                              )
-                                              .closed;
-                                          setState(() {
-                                            visibleGoalDetails = false;
-                                          });
-                                        },
-                                        child: Image.asset(item.picture),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                  ),
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: GoalsPageView(
+                        setGoalIsOpen: (val) => setState(() {
+                              visibleGoalDetails = val;
+                            }))),
               ),
             ],
           ),
@@ -277,6 +193,145 @@ class _HomeScreenState extends State<HomeScreen> {
               : null,
         );
       }),
+    );
+  }
+}
+
+class GoalsPageView extends StatefulWidget {
+  final Function(bool val) setGoalIsOpen;
+  const GoalsPageView({super.key, required this.setGoalIsOpen});
+
+  @override
+  State<GoalsPageView> createState() => _GoalsPageViewState();
+}
+
+class _GoalsPageViewState extends State<GoalsPageView> {
+  final controller = PageController(
+    viewportFraction: .5,
+  );
+
+  StreamSubscription? _sub;
+
+  List<Goal> goals = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    listenForGoals();
+  }
+
+  void listenForGoals() {
+    void onChange() {
+      final onboarding = context.read<OnboardingCubit>();
+      final data = context.read<DataCubit>().state;
+      goals = onboarding.getSuggestion(data.goals);
+      setState(() {});
+
+      if (onboarding.state.initalGoal != null) {
+        final index = goals.indexWhere((g) => g == onboarding.state.initalGoal);
+
+        Future.delayed(Duration(milliseconds: 450)).then((_) {
+          controller.animateToPage(index,
+              curve: Curves.easeInOut,
+              duration: Duration(
+                milliseconds: 450,
+              ));
+        });
+      }
+    }
+
+    _sub = MergeStream([
+      context.read<OnboardingCubit>().stream,
+      context.read<DataCubit>().stream,
+    ]).listen((event) => onChange());
+
+    onChange();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      scrollDirection: Axis.horizontal,
+      controller: controller,
+      children: List.generate(
+        goals.length,
+        (i) => AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) {
+              final item = goals[i % goals.length];
+              final indice = i -
+                  (controller.position.haveDimensions
+                          ? controller.page!
+                          : goals.length / 2 + 0.1)
+                      .clamp(i - 0.5, i + 0.5);
+              final val = 1 - indice.abs();
+
+              return Opacity(
+                opacity: val,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: AspectRatio(
+                    aspectRatio: 5.5 / 7,
+                    child: AnimatedContainer(
+                      key: ValueKey(i),
+                      duration: Duration(milliseconds: 250),
+                      transformAlignment: Alignment.center,
+                      transform: Transform.rotate(
+                            angle: val < 0.8 ? (indice < 0 ? -1 : 1) * 0.08 : 0,
+                          ).transform *
+                          Transform.scale(
+                            scale: val < 0.8 ? 0.9 : 1,
+                          ).transform,
+                      child: Container(
+                        margin: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            if (val > 0.5)
+                              BoxShadow(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.3),
+                                blurRadius: 12,
+                                spreadRadius: 5,
+                              ),
+                          ],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            widget.setGoalIsOpen(true);
+
+                            await Scaffold.of(context)
+                                .showBottomSheet(
+                                  (_) => GoalDetailSheet(
+                                    goal: item,
+                                  ),
+                                  elevation: 8,
+                                  backgroundColor:
+                                      Color.fromARGB(255, 32, 48, 54),
+                                )
+                                .closed;
+                            setState(() {
+                              widget.setGoalIsOpen(false);
+                            });
+                          },
+                          child: Image.asset(item.picture),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+      ),
     );
   }
 }

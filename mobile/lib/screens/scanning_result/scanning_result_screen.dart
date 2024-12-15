@@ -1,9 +1,14 @@
+import 'package:bitescan/cubits/data/data_cubit.dart';
+import 'package:bitescan/cubits/data/data_state.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/main.dart';
 import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/utils/utils.dart';
-import 'package:bitescan/screens/scanning_result/widgets/scanning_results_widgets.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'widgets/food_view.dart';
 
@@ -21,15 +26,19 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
   final PageController pageController = PageController();
   Food? product;
 
+  Goal? goal;
+
+  List<Food> get foods {
+    return context.read<DataCubit>().state.foods;
+  }
+
   List<Food> get similar {
-    final result =
-        foodDB.where((f) => f.category == product?.category).toList();
+    final result = foods.where((f) => f.category == product?.category).toList();
     result.sort((a, b) {
-      if (Storage.goal.value == null) return 0;
-      final values =
-          result.map((e) => Goal.rank(e, Storage.goal.value!)).toList();
-      final sa = smoothValue(values, Goal.rank(a, Storage.goal.value!));
-      final sb = smoothValue(values, Goal.rank(b, Storage.goal.value!));
+      if (goal == null) return 0;
+      final values = result.map((e) => Goal.rank(e, goal!)).toList();
+      final sa = smoothValue(values, Goal.rank(a, goal!));
+      final sb = smoothValue(values, Goal.rank(b, goal!));
 
       return (-sa + sb).round();
     });
@@ -40,20 +49,35 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2)).then((_) {
+    prepareTargetFood();
+  }
+
+  void prepareTargetFood() {
+    void onChange() {
       late final Food target;
       try {
-        target = foodDB.firstWhere((result) => result.code == widget.code);
-      } catch (e) {
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      }
-
-      setState(() {
-        loading = false;
+        target = foods.firstWhere((result) => result.code == widget.code);
         product = target;
-      });
+
+        setState(() {
+          loading = false;
+          goal = context.read<OnboardingCubit>().state.initalGoal;
+        });
+      } catch (e) {}
+    }
+
+    MergeStream([
+      context.read<OnboardingCubit>().stream,
+      context.read<DataCubit>().stream,
+    ]).listen((event) => onChange());
+
+    onChange();
+
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      if (product == null && mounted) {
+        Navigator.of(context).pop();
+        return;
+      }
     });
   }
 
@@ -79,12 +103,14 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
                   loading: loading,
                   similar: similar,
                   food: product,
+                  goal: goal,
                 ),
                 ...similar
                     .map((similarFood) => FoodView(
                           pageController: pageController,
                           loading: loading,
                           similar: similar,
+                          goal: goal,
                           food: similarFood,
                         ))
                     .toList()

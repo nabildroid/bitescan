@@ -14,16 +14,16 @@ final GoRouter router = GoRouter(
   observers: [
     locator.get<RouteObserver<ModalRoute<dynamic>>>(),
   ],
-  initialLocation: Paths.home.landing,
-  redirect: (BuildContext context, GoRouterState state) {
-    if (state.fullPath == null) return null;
-    if (!state.fullPath!.contains(Paths.onboarding.landing)) {
-      // if (Random().nextBool()) {
-      //   return Paths.onboarding.landing;
-      // }
-    }
-    return null;
-  },
+  initialLocation: Paths.onboarding.landing,
+  // redirect: (BuildContext context, GoRouterState state) {
+  //   if (state.fullPath == null) return null;
+  //   if (!state.fullPath!.contains(Paths.onboarding.landing)) {
+  //     // if (Random().nextBool()) {
+  //     //   return Paths.onboarding.landing;
+  //     // }
+  //   }
+  //   return null;
+  // },
   routes: [
     GoRoute(
         path: Paths.onboarding.landing, builder: (_, __) => OnboardingScreen()),

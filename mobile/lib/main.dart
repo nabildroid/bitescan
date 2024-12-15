@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bitescan/cubits/data/data_cubit.dart';
+import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
 
@@ -45,14 +48,26 @@ class BitescanApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'BitScan',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF673AB7)),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => OnboardingCubit(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (_) => DataCubit()..init(),
+          lazy: false,
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'BitScan',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF673AB7)),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
       ),
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
     );
   }
 }

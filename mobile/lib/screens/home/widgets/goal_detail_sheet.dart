@@ -1,7 +1,7 @@
+import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:flutter/material.dart';
-
-import '../../../main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GoalDetailSheet extends StatelessWidget {
   final Goal goal;
@@ -12,6 +12,9 @@ class GoalDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSelected =
+        context.watch<OnboardingCubit>().state.initalGoal == goal;
+
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
@@ -79,20 +82,16 @@ class GoalDetailSheet extends StatelessWidget {
         ),
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterFloat,
-        floatingActionButton: ValueListenableBuilder(
-            valueListenable: Storage.goalId,
-            builder: (context, val, _) {
-              if (val == goal.id) return SizedBox.shrink();
-              return FloatingActionButton.extended(
+        floatingActionButton: !isSelected
+            ? FloatingActionButton.extended(
                 onPressed: () {
-                  Storage.goalId.value = goal.id;
-                  Storage.goal.value = goal;
+                  context.read<OnboardingCubit>().setGoal(goal);
                   Navigator.of(context).pop();
                 },
                 label: Text("Let's Start"),
                 icon: Icon(Icons.lens_outlined),
-              );
-            }));
+              )
+            : null);
   }
 }
 
