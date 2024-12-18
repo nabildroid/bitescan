@@ -4,12 +4,16 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
+import 'package:bitescan/cubits/session_confirmation/session_confirmation_cubit.dart';
 import 'package:bitescan/models/goal.dart';
+import 'package:bitescan/services/local_notification_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -25,7 +29,20 @@ final BehaviorSubject<String?> selectNotificationSubject =
 void notificationReceiver(NotificationResponse details) =>
     selectNotificationSubject.add(details.payload);
 
+DateTime? initStarted;
+void logCurrentTiming() {
+  if (initStarted == null) return;
+  final dur = DateTime.now().difference(initStarted!);
+  locator.get<Logger>().t(
+        "Init time: $dur ms",
+      );
+
+  initStarted = null;
+}
+
 void main() async {
+  initStarted = DateTime.now();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await setUpLocator();
@@ -41,6 +58,12 @@ void main() async {
           stackTrace: details.stack,
         );
   };
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
+
+  await locator.get<LocalNotificationService>().init();
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
 
@@ -68,6 +91,10 @@ class BitescanApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ScanningCubit()..init(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (_) => SessionConfirmationCubit(),
           lazy: false,
         ),
       ],

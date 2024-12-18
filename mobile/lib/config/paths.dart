@@ -3,6 +3,7 @@ abstract class Paths {
   static const result = _ScanningResultPaths._();
   static const scan = _ScanPaths._();
   static const onboarding = _OnboardingPaths._();
+  static const shoppingConfirmation = _ShoppingConfirmationPaths._();
 }
 
 class _OnboardingPaths with _RootPaths {
@@ -24,6 +25,14 @@ class _ScanningResultPaths with _RootPaths {
   String get landing => rootPath("result/:code");
 
   String link(String code) => rootPath("result/$code");
+}
+
+class _ShoppingConfirmationPaths with _RootPaths {
+  const _ShoppingConfirmationPaths._();
+
+  String get landing => rootPath("confirm/:id");
+
+  String link(String id) => rootPath("confirm/$id");
 }
 
 class _ScanPaths with _RootPaths {

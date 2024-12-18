@@ -20,7 +20,6 @@ class DataState extends Equatable {
   DataState copyWith({
     List<Food>? foods,
     List<Goal>? goals,
-    Goal? initalGoal,
   }) {
     return DataState(
       foods: foods ?? this.foods,

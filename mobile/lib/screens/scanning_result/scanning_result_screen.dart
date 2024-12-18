@@ -79,7 +79,7 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
 
         setState(() {
           loading = false;
-          goal = context.read<OnboardingCubit>().state.initalGoal;
+          goal = context.read<OnboardingCubit>().state.goal;
         });
       } catch (e) {}
     }

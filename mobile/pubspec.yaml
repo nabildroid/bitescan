@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   mobile_scanner:
+  syncfusion_flutter_barcodes:
   flutter_local_notifications:
   wakelock_plus: ^1.2.5 # screen always on for 5 min when Scanning screen, reseted on each scan
   workmanager: ^0.5.1 # contantly checking new data in background, and scheduling scanning checkout
@@ -46,6 +47,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   cached_network_image: ^3.3.0  #Food Pictures are online provided
   bloc: ^8.1.1
+  hydrated_bloc:
   connectivity_plus: ^6.0.3  # online an offline checker
   dio: ^5.7.0  # http
   equatable:

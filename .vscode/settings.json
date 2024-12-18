@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "**/.dart_tool/**": true,
+        "**/.flutter*": true,
+        "**/.idea/**": true,
+        "**/ios/**": true,
+        "**/macos/**": true,
+        "**/test/**": true,
+        "**/web/**": true,
+        "**/windows/**": true
+    },
+    "files.restoreUndoStack": false
+}

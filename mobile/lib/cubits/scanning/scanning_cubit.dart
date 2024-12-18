@@ -19,6 +19,18 @@ class ScanningCubit extends Cubit<ScanningState> with Loggable {
     await loadFromCache();
   }
 
+  confirmFood({
+    required String sessionId,
+    required PurchaseDecision decision,
+  }) {
+    final newSessionReview = state.shoppings.map((e) {
+      if (e.id == sessionId) return e.decide(decision);
+      return e;
+    }).toList();
+
+    emit(state.copyWith(shoppings: newSessionReview.toSet()));
+  }
+
   startShoppingSession() {
     if (state.session == null) {
       emit(state.copyWith(session: Shoppingsession.create()));

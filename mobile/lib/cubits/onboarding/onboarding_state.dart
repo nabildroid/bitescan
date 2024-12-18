@@ -6,17 +6,17 @@ class OnboardingState extends Equatable {
   final int ageGroup;
   final String gender;
 
-  final Goal? initalGoal;
+  final Goal? goal;
 
   const OnboardingState({
     required this.name,
     required this.ageGroup,
     required this.gender,
-    required this.initalGoal,
+    required this.goal,
   });
 
   const OnboardingState.inital()
-      : initalGoal = null,
+      : goal = null,
         ageGroup = 0,
         gender = "test",
         name = "";
@@ -25,19 +25,19 @@ class OnboardingState extends Equatable {
     String? name,
     int? ageGroup,
     String? gender,
-    Goal? initalGoal,
+    Goal? goal,
   }) {
     return OnboardingState(
       name: name ?? this.name,
       ageGroup: ageGroup ?? this.ageGroup,
       gender: gender ?? this.gender,
-      initalGoal: initalGoal ?? this.initalGoal,
+      goal: goal ?? this.goal,
     );
   }
 
   @override
   List<Object?> get props => [
-        initalGoal?.id,
+        goal?.id,
         name,
         ageGroup,
         gender,

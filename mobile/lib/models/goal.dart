@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:bitescan/extentions/food_values.dart';
+import 'package:equatable/equatable.dart';
+
 import 'food.dart';
 
 abstract class _FoodRanker {
@@ -207,7 +210,7 @@ abstract class _FoodRanker {
   }
 }
 
-class Goal {
+class Goal extends Equatable {
   final Map<Nutrition, double> nutritionFactors;
   final Map<Vetamins, double> vetaminsFactors;
   final Map<Minerals, double> mineralsFactors;
@@ -244,4 +247,44 @@ class Goal {
 
     return (r1 + r2 + r3 + r4) / 4;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "nutritionFactors": NutritionId.serialize(nutritionFactors),
+      "vetaminsFactors": VetaminsId.serialize(vetaminsFactors),
+      "mineralsFactors": MineralsId.serialize(mineralsFactors),
+      "maxPositiveCalories": maxPositiveCalories,
+      "id": id,
+      "name": name,
+      "longName": longName,
+      "description": description,
+      "picture": picture,
+      "duration": duration,
+      "category": category,
+      "rating": rating,
+    };
+  }
+
+  static Goal fromJson(Map<String, dynamic> data) {
+    return Goal(
+      nutritionFactors: NutritionId.deserialize(
+          Map<String, double>.from(data["nutritionFactors"])),
+      vetaminsFactors: VetaminsId.deserialize(
+          Map<String, double>.from(data["vetaminsFactors"])),
+      mineralsFactors: MineralsId.deserialize(
+          Map<String, double>.from(data["mineralsFactors"])),
+      maxPositiveCalories: data["maxPositiveCalories"],
+      id: data["id"],
+      name: data["name"],
+      longName: data["longName"],
+      description: data["description"],
+      picture: data["picture"],
+      duration: data["duration"],
+      category: data["category"],
+      rating: data["rating"],
+    );
+  }
+
+  @override
+  List<Object?> get props => [id];
 }

@@ -172,7 +172,7 @@ class AdsPage extends StatelessWidget {
                 // Navigator.of(context).push(
                 //     MaterialPageRoute(builder: (_) => OnboardingScreen2()));
               },
-              child: Text("Continue"),
+              child: Text("Pick a goal"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
                 foregroundColor: Colors.white,

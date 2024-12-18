@@ -1,3 +1,5 @@
+import 'package:bitescan/config/locator.dart';
+import 'package:bitescan/services/local_notification_service.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingRadioOptions<T> extends StatefulWidget {
@@ -28,7 +30,7 @@ class _OnboardingRadioOptionsState<T> extends State<OnboardingRadioOptions>
       upperBound: 12,
     );
 
-    animationController.addListener(() {
+    animationController.addListener(() async {
       if (animationController.isCompleted) {
         if (value == null) return;
 

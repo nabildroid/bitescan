@@ -12,8 +12,7 @@ class GoalDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSelected =
-        context.watch<OnboardingCubit>().state.initalGoal == goal;
+    final isSelected = context.watch<OnboardingCubit>().state.goal == goal;
 
     return Scaffold(
         backgroundColor: Colors.transparent,

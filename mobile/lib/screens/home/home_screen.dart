@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:bitescan/config/locator.dart';
 import 'package:bitescan/config/paths.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
+import 'package:bitescan/screens/home/widgets/sessionsConfirmationButton.dart';
 import 'package:bitescan/screens/shopping_confirmation/shopping_confirmation_screen.dart';
+import 'package:bitescan/services/local_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
             .then((_) => Future.delayed(Duration(seconds: 3)))
             .then((_) {
           if (mounted == false) return;
+
+          locator.get<LocalNotificationService>().requestPermission();
+          // // todo, make name request later on secon app use, first time it's only notification that is requested!
           // Navigator.of(context).push(
           //   DialogRoute(context: context, builder: (_) => NameDialog()),
           // );
@@ -75,26 +81,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 BlocBuilder<OnboardingCubit, OnboardingState>(
                     builder: (context, state) {
-                  if (state.initalGoal == null) {
+                  if (state.goal == null) {
                     return Text("Let's make food better");
                   } else {
-                    return Text("Let's work on ${state.initalGoal!.name}");
+                    return Text("Let's work on ${state.goal!.name}");
                   }
                 }),
               ],
             ),
             actions: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ShoppingConfirmationScreen(),
-                  ));
-                },
-                child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage("https://github.com/nabildroid.png"),
-                ),
-              ),
+              SessionsconfirmationButton(),
               SizedBox(width: 8),
             ],
           ),
@@ -236,8 +232,8 @@ class _GoalsPageViewState extends State<GoalsPageView> {
       goals = onboarding.getSuggestion(data.goals);
       setState(() {});
 
-      if (onboarding.state.initalGoal != null) {
-        final index = goals.indexWhere((g) => g == onboarding.state.initalGoal);
+      if (onboarding.state.goal != null) {
+        final index = goals.indexWhere((g) => g == onboarding.state.goal);
 
         Future.delayed(Duration(milliseconds: 450)).then((_) {
           controller.animateToPage(index,

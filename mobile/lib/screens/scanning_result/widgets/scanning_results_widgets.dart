@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bitescan/extentions/food_values.dart';
 import 'package:bitescan/models/food.dart';
 import 'package:bitescan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -190,85 +191,6 @@ class NutritionDetails extends StatelessWidget {
         )
       ],
     );
-  }
-}
-
-extension on Nutrition {
-  MapEntry<String, Color> get display {
-    switch (this) {
-      case Nutrition.caffeine:
-        return MapEntry(
-            "caffeine", Colors.brown.shade400); // Slightly darker for contrast
-
-      case Nutrition.protein:
-        return MapEntry(
-            "protein",
-            Colors.lightGreen
-                .shade600); // Green is energizing and contrasts purple well
-
-      case Nutrition.fats:
-        return MapEntry("fats",
-            Colors.amber.shade400); // Amber is warm and visible on purple
-
-      case Nutrition.saturatedFats:
-        return MapEntry(
-            "saturatedFats", Colors.deepOrange.shade300); // Bold for emphasis
-
-      case Nutrition.monounsaturatedFats:
-        return MapEntry("monounsaturatedFats",
-            Colors.orangeAccent.shade200); // Complementary tone
-
-      case Nutrition.polyunsaturatedFats:
-        return MapEntry(
-            "polyunsaturatedFats", Colors.teal.shade400); // Cool and visible
-
-      case Nutrition.transFats:
-        return MapEntry(
-            "transFats", Colors.red.shade300); // Red signifies caution
-
-      case Nutrition.sugars:
-        return MapEntry(
-            "sugars", Colors.pinkAccent.shade200); // Vibrant and energetic
-
-      case Nutrition.fiber:
-        return MapEntry(
-            "fiber", Colors.green.shade700); // Dark green for earthiness
-
-      case Nutrition.starch:
-        return MapEntry("starch", Colors.cyan.shade500); // Fresh and clean
-
-      case Nutrition.carbohydrates:
-        return MapEntry(
-            "carbohydrates", Colors.yellow.shade700); // Bright and noticeable
-
-      case Nutrition.cholesterol:
-        return MapEntry(
-            "cholesterol", Colors.redAccent.shade100); // Light caution tone
-
-      case Nutrition.omega3:
-        return MapEntry(
-            "omega3", Colors.blueAccent.shade700); // Rich oceanic blue
-
-      case Nutrition.omega6:
-        return MapEntry(
-            "omega6", Colors.cyanAccent.shade400); // Vibrant aqua tone
-
-      case Nutrition.antioxidants:
-        return MapEntry("antioxidants",
-            Colors.purpleAccent.shade200); // Matches theme but distinguishable
-
-      case Nutrition.aminoAcids:
-        return MapEntry(
-            "aminoAcids", Colors.indigo.shade400); // Subtle yet contrasting
-
-      case Nutrition.creatine:
-        return MapEntry(
-            "creatine", Colors.blueAccent.shade100); // Light and clean
-
-      case Nutrition.phytosterols:
-        return MapEntry(
-            "phytosterols", Colors.greenAccent.shade400); // Natural and vibrant
-    }
   }
 }
 

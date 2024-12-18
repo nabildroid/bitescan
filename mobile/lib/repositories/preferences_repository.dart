@@ -47,8 +47,13 @@ class PreferenceRepository with Loggable {
         (SharedPreferences prefs) => prefs.remove(globalPrefix + key),
       );
 
-  Future<bool> get isFirstTime async {
-    return (await getBool("isFirstTime")) ?? true;
+  Future<bool?> firstTime({bool? val}) async {
+    if (val == null) {
+      return (await getBool("isFirstTime")) ?? true;
+    } else {
+      setBool('isFirstTime', val);
+      return null;
+    }
   }
 
   @override
