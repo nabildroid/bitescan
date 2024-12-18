@@ -5,7 +5,7 @@ import 'package:bitescan/models/goal.dart';
 
 class RemoteDataRepository {
   Future<List<Food>> getFoods() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 10));
 
     return [
       Food(
@@ -2470,7 +2470,7 @@ class RemoteDataRepository {
   }
 
   Future<List<Goal>> getGoals() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 10));
     return [
       Goal(
         name: "Energy",

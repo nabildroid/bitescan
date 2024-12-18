@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:bitescan/extentions/food_values.dart';
+
 enum Nutrition {
   protein,
   fats,
@@ -83,4 +85,44 @@ class Food {
     required this.avgDialyConsumption,
     required this.vitamins,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "nutritions": NutritionId.serialize(nutritions),
+      "vitamins": VetaminsId.serialize(vitamins),
+      "minerals": MineralsId.serialize(minerals),
+      "code": code,
+      "id": id,
+      "name": name,
+      "image": image,
+      "avgDialyConsumption": avgDialyConsumption,
+      "quantity": quantity,
+      "calories": calories,
+      "category": category,
+      "subcategory": subcategory,
+    };
+  }
+
+  static Food fromJson(Map<String, dynamic> data) {
+    return Food(
+      nutritions:
+          NutritionId.deserialize(Map<String, double>.from(data["nutritions"])),
+      vitamins:
+          VetaminsId.deserialize(Map<String, double>.from(data["vitamins"])),
+      minerals:
+          MineralsId.deserialize(Map<String, double>.from(data["minerals"])),
+      avgDialyConsumption: data["avgDialyConsumption"],
+      id: data["id"],
+      name: data["name"],
+      calories: data["calories"],
+      subcategory: data["subcategory"],
+      image: data["image"],
+      quantity: data["quantity"],
+      category: data["category"],
+      code: data["code"],
+    );
+  }
+
+  @override
+  List<Object?> get props => [id];
 }

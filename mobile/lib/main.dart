@@ -10,12 +10,15 @@ import 'package:bitescan/services/local_notification_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sembast/sembast_io.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 
@@ -45,7 +48,19 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await setUpLocator();
+  final dir = await getApplicationDocumentsDirectory();
+  await dir.create(recursive: true);
+
+  final db = await databaseFactoryIo.openDatabase(
+    join(dir.path, 'laknabil.db'),
+  );
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: dir,
+  );
+
+  await setUpLocator(sembastInstance: db);
+
   await initializeDateFormatting(Platform.localeName);
   tz.initializeTimeZones();
 
@@ -58,10 +73,6 @@ void main() async {
           stackTrace: details.stack,
         );
   };
-
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getTemporaryDirectory(),
-  );
 
   await locator.get<LocalNotificationService>().init();
 
@@ -100,6 +111,10 @@ class BitescanApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: 'BitScan',
+        supportedLocales: const [
+          Locale('fr', 'FR'),
+          Locale('ar', 'DZ'),
+        ],
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF673AB7)),
           useMaterial3: true,
