@@ -1,0 +1,9 @@
+{
+  "@@locale": "fr",
+  "title": "Welcome",
+  "@title": {
+    "description": "Title for the Demo App",
+    "type": "text",
+    "placeholders": {}
+  }
+}

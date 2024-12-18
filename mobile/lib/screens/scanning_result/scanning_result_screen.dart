@@ -7,6 +7,7 @@ import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -93,6 +94,7 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
 
     Future.delayed(Duration(seconds: 2)).then((_) {
       if (product == null && mounted) {
+        HapticFeedback.lightImpact();
         Navigator.of(context).pop();
         return;
       }

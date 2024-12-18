@@ -1,0 +1,9 @@
+{
+  "@@locale": "ar",
+  "title": "مرحبا",
+  "@title": {
+    "description": "Title for the Demo App",
+    "type": "text",
+    "placeholders": {}
+  }
+}

@@ -1,16 +1,17 @@
 import 'dart:io';
+import 'package:bitescan/cubits/system_config/system_config_cubit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
 import 'package:bitescan/cubits/session_confirmation/session_confirmation_cubit.dart';
-import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/services/local_notification_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
@@ -80,18 +81,28 @@ void main() async {
 
   runApp(BitescanApp(
     savedThemeMode: savedThemeMode,
+    systemConfigCubit: SystemConfigCubit(const Color(0xFF673AB7)),
   ));
 }
 
 class BitescanApp extends StatelessWidget {
   final AdaptiveThemeMode? savedThemeMode;
 
-  const BitescanApp({super.key, this.savedThemeMode});
+  final SystemConfigCubit systemConfigCubit;
+
+  const BitescanApp({
+    super.key,
+    this.savedThemeMode,
+    required this.systemConfigCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider.value(
+          value: systemConfigCubit,
+        ),
         BlocProvider(
           create: (_) => DataCubit()..init(),
           lazy: false,
@@ -109,19 +120,32 @@ class BitescanApp extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: MaterialApp.router(
-        title: 'BitScan',
-        supportedLocales: const [
-          Locale('fr', 'FR'),
-          Locale('ar', 'DZ'),
-        ],
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF673AB7)),
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
-      ),
+      child: BlocBuilder<SystemConfigCubit, SystemConfigState>(
+          builder: (context, config) {
+        return MaterialApp.router(
+          title: 'BitScan',
+          supportedLocales: const [
+            Locale('fr', 'FR'),
+            Locale('ar', 'DZ'),
+          ],
+          locale: config.locale,
+          onGenerateTitle: (context) =>
+              AppLocalizations.of(context)?.title ?? "bitScan",
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // Add this line
+
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: config.mainColor),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
+        );
+      }),
     );
   }
 }

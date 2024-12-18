@@ -5,6 +5,7 @@ import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
 import 'package:bitescan/cubits/session_confirmation/session_confirmation_cubit.dart';
 import 'package:bitescan/cubits/session_confirmation/session_confirmation_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
@@ -79,6 +80,7 @@ class _ShoppingConfirmationScreenState extends State<ShoppingConfirmationScreen>
         listenWhen: (n, o) => n.queue.isNotEmpty && o.queue.isEmpty,
         listener: (ctx, state) {
           if (state.queue.isEmpty && mounted) {
+            HapticFeedback.mediumImpact();
             Navigator.maybePop(ctx);
           }
         },

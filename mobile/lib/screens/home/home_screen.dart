@@ -5,6 +5,7 @@ import 'package:bitescan/config/paths.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
+import 'package:bitescan/cubits/system_config/system_config_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
 import 'package:bitescan/screens/home/widgets/sessionsConfirmationButton.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool firstTime;
@@ -22,6 +24,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+final goalsKey = GlobalKey();
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = PageController(
@@ -77,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Walcome Nabil Lakrib",
+                  AppLocalizations.of(context)?.title ?? "Title",
                 ),
                 BlocBuilder<OnboardingCubit, OnboardingState>(
                     builder: (context, state) {
@@ -121,10 +125,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text("Category"),
                     Spacer(),
-                    Text(
-                      "See All",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                    InkWell(
+                      onTap: () {
+                        context
+                            .read<SystemConfigCubit>()
+                            .toggleLanguage(context);
+                      },
+                      child: Text(
+                        "See All",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
                     IconButton(
@@ -176,11 +187,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GoalsPageView(
-                        setGoalIsOpen: (val) => setState(() {
-                              visibleGoalDetails = val;
-                            }))),
+                  padding: const EdgeInsets.all(8.0),
+                  child: GoalsPageView(
+                    setGoalIsOpen: (val) => setState(() {
+                      visibleGoalDetails = val;
+                    }),
+                  ),
+                ),
               ),
             ],
           ),
@@ -241,6 +254,8 @@ class _GoalsPageViewState extends State<GoalsPageView> {
               duration: Duration(
                 milliseconds: 450,
               ));
+
+          setState(() {});
         });
       }
     }

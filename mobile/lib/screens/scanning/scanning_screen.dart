@@ -90,6 +90,8 @@ class _ScanningScreenState extends State<ScanningScreen>
   }
 
   void openResult(String value) {
+    HapticFeedback.lightImpact();
+
     wakeLockSubject.add(null);
     context.push(Paths.result.link(value)).then((_) {
       if (!mounted) return;

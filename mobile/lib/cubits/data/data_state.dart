@@ -16,10 +16,10 @@ class DataState extends Equatable {
     required this.isOffline,
   });
 
-  const DataState.inital()
-      : foods = const [],
+  DataState.inital()
+      : foods = [],
         isOffline = true,
-        goals = const [];
+        goals = [];
 
   DataState copyWith({
     List<Food>? foods,
@@ -27,8 +27,8 @@ class DataState extends Equatable {
     bool? isOffline,
   }) {
     return DataState(
-      foods: foods ?? this.foods,
-      goals: goals ?? this.goals,
+      foods: (foods ?? this.foods)..sort((a, b) => a.id.compareTo(b.id)),
+      goals: (goals ?? this.goals)..sort((a, b) => a.id.compareTo(b.id)),
       isOffline: isOffline ?? this.isOffline,
     );
   }

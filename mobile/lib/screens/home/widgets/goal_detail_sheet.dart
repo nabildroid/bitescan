@@ -1,6 +1,7 @@
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GoalDetailSheet extends StatelessWidget {
@@ -84,6 +85,7 @@ class GoalDetailSheet extends StatelessWidget {
         floatingActionButton: !isSelected
             ? FloatingActionButton.extended(
                 onPressed: () {
+                  HapticFeedback.selectionClick();
                   context.read<OnboardingCubit>().setGoal(goal);
                   Navigator.of(context).pop();
                 },
