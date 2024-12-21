@@ -12,6 +12,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
@@ -141,6 +142,9 @@ class BitescanApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: config.mainColor),
             useMaterial3: true,
+            textTheme: GoogleFonts.loraTextTheme(
+              Theme.of(context).textTheme,
+            ),
           ),
           debugShowCheckedModeBanner: false,
           routerConfig: router,

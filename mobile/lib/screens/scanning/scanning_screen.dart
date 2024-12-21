@@ -144,10 +144,21 @@ class _ScanningScreenState extends State<ScanningScreen>
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: FittedBox(child: Text(ScanningScreen.title)),
+        title: FittedBox(
+            child: Text(
+          ScanningScreen.title,
+          style: TextStyle(
+            shadows: [
+              Shadow(
+                color: Colors.black38,
+                blurRadius: 2,
+              ),
+            ],
+          ),
+        )),
         backgroundColor: Colors.transparent,
       ),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.grey.shade700,
       body: Column(
         children: [
           Flexible(
@@ -218,33 +229,41 @@ class _ScanningScreenState extends State<ScanningScreen>
                   )
                 ],
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
               width: double.infinity,
               child: Column(
                 children: [
-                  SizedBox(height: 16),
+                  SizedBox(height: 10),
                   Text(
                     "Or Select Bellow",
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(color: Theme.of(context).primaryColor),
+                        .copyWith(color: Colors.black),
+                  ),
+                  Divider(
+                    color: Colors.black12,
+                    thickness: 1,
+                    indent: 16,
+                    endIndent: 16,
                   ),
                   BlocBuilder<DataCubit, DataState>(builder: (context, state) {
                     return Expanded(
                         child: ListView.separated(
                       itemBuilder: (_, index) => ListTile(
+                        onTap: () {
+                          openResult(state.foods[index].code);
+                        },
                         trailing: IconButton(
                           onPressed: () {
                             openResult(state.foods[index].code);
                           },
-                          icon: Icon(Icons.real_estate_agent_rounded),
+                          icon: Icon(Icons.arrow_forward_ios),
                         ),
                         leading: Container(
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(.3),
+                            color: Colors.black45,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           width: 40,
@@ -252,7 +271,12 @@ class _ScanningScreenState extends State<ScanningScreen>
                           padding: EdgeInsets.all(8),
                           child: Image.network(state.foods[index].image),
                         ),
-                        title: Text(state.foods[index].name),
+                        title: Text(
+                          state.foods[index].name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                       separatorBuilder: (_, __) => SizedBox(height: 8),
                       itemCount: state.foods.length,

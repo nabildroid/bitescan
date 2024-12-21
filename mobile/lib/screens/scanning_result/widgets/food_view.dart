@@ -3,8 +3,9 @@ import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'scanning_results_widgets.dart';
+import 'food_evaluation_details.dart';
 
 class FoodView extends StatelessWidget {
   final Food? food;
@@ -37,15 +38,14 @@ class FoodView extends StatelessWidget {
     }
 
     final feedbackColor = score < 20
-        ? const Color(0xffA30015)
+        ? const Color(0xffFF595E)
         : score < 70
-            ? const Color(0xffEE964B)
-            : const Color(0xff009B72);
+            ? const Color(0xffFFCA3A)
+            : const Color(0xff8AC926);
 
     return Column(
       children: [
         Flexible(
-          key: ValueKey("top"),
           flex: 8,
           child: AnimatedSlide(
             duration: Duration(seconds: 1),
@@ -55,8 +55,21 @@ class FoodView extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(25)),
-                color: Theme.of(context).primaryColor,
+                    BorderRadius.vertical(bottom: Radius.circular(12)),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.grey.shade700,
+                    Colors.grey.shade800,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black26,
+                    width: 2,
+                  ),
+                ),
               ),
               padding: EdgeInsets.all(8),
               child: Column(
@@ -77,12 +90,22 @@ class FoodView extends StatelessWidget {
                       ),
                       Spacer(),
                       Chip(
-                        backgroundColor: Color(0xffAFE3C0),
-                        label: Text("${score.round()} points",
-                            style: TextStyle(
-                                color: const Color.fromARGB(255, 14, 46, 16))),
-                        avatar: Icon(Icons.upload,
-                            color: const Color.fromARGB(255, 14, 46, 16)),
+                        side: BorderSide.none,
+                        backgroundColor: score > 50
+                            ? Color.fromARGB(129, 64, 185, 104)
+                            : Color.fromARGB(129, 207, 72, 72),
+                        padding: EdgeInsets.zero,
+                        label: Text(
+                            "${score.round().toString().padLeft(2, "0")}%",
+                            style: GoogleFonts.silkscreen(
+                                color: score > 50
+                                    ? Color.fromARGB(255, 14, 46, 16)
+                                    : Color.fromARGB(255, 46, 14, 14))),
+                        avatar: Icon(
+                            score > 50 ? Icons.upload : Icons.download_rounded,
+                            color: score > 50
+                                ? const Color.fromARGB(255, 14, 46, 16)
+                                : const Color.fromARGB(255, 46, 14, 14)),
                       )
                     ],
                   ),
@@ -137,9 +160,9 @@ class FoodView extends StatelessWidget {
                                     color: Colors.white,
                                     shadows: [
                                       BoxShadow(
-                                        blurRadius: 12,
-                                        spreadRadius: 2,
-                                        color: Colors.black45,
+                                        blurRadius: 6,
+                                        spreadRadius: 3,
+                                        color: Colors.black87,
                                       )
                                     ]),
                               ),
@@ -174,7 +197,7 @@ class FoodView extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(color: Theme.of(context).primaryColor),
+                        .copyWith(color: Colors.black87),
                   ),
                   Expanded(
                       child: ListView.builder(
@@ -182,18 +205,22 @@ class FoodView extends StatelessWidget {
                       final food = similar[i];
 
                       return ListTile(
+                        onTap: () {
+                          pageController.animateToPage(i + 1,
+                              curve: Curves.easeInExpo,
+                              duration: Duration(milliseconds: 500));
+                        },
                         trailing: IconButton(
                           onPressed: () {
                             pageController.animateToPage(i + 1,
                                 curve: Curves.easeInExpo,
                                 duration: Duration(milliseconds: 500));
                           },
-                          icon: Icon(Icons.input_outlined),
+                          icon: Icon(Icons.chevron_right_rounded),
                         ),
                         leading: Container(
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(.3),
+                            color: Colors.black45,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           width: 40,
@@ -201,7 +228,12 @@ class FoodView extends StatelessWidget {
                           padding: EdgeInsets.all(8),
                           child: Image.network(food.image),
                         ),
-                        title: Text(food.name),
+                        title: Text(
+                          food.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                         subtitle: Text(getScore(food).toString()),
                         visualDensity: VisualDensity.compact,
                       );

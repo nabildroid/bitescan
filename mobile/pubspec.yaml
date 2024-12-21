@@ -62,6 +62,8 @@ dependencies:
   crypto:
   flutter_localizations:
     sdk: flutter
+  google_fonts:
+  fl_chart:
 
     
 dev_dependencies:

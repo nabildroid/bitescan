@@ -44,7 +44,7 @@ class _FoodEvaluationDetailsState extends State<FoodEvaluationDetails>
               color: Colors.white,
               radius: 3,
             ),
-            tabs: [
+            tabs: const [
               Tab(
                 text: "Nutrition",
                 height: 40,
@@ -159,7 +159,7 @@ class NutritionDetails extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                   backgroundColor: e.key.value, radius: 4),
-                              SizedBox(width: 2),
+                              SizedBox(width: 6),
                               Text(
                                 e.key.key,
                                 style: TextStyle(
@@ -173,12 +173,12 @@ class NutritionDetails extends StatelessWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(width: 10),
+                              SizedBox(width: 16),
                               Text(
                                 e.value.value.toString(),
                                 style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16,
+                                  color: Colors.white60,
+                                  fontSize: 12,
                                 ),
                               )
                             ],

@@ -6,76 +6,76 @@ extension NutritionDisplay on Nutrition {
     switch (this) {
       case Nutrition.caffeine:
         return MapEntry(
-            "caffeine", Colors.brown.shade400); // Slightly darker for contrast
+            "Caffeine", Colors.brown.shade400); // Slightly darker for contrast
 
       case Nutrition.protein:
         return MapEntry(
-            "protein",
+            "Protein",
             Colors.lightGreen
                 .shade600); // Green is energizing and contrasts purple well
 
       case Nutrition.fats:
-        return MapEntry("fats",
+        return MapEntry("Fats",
             Colors.amber.shade400); // Amber is warm and visible on purple
 
       case Nutrition.saturatedFats:
         return MapEntry(
-            "saturatedFats", Colors.deepOrange.shade300); // Bold for emphasis
+            "SaturatedFats", Colors.deepOrange.shade300); // Bold for emphasis
 
       case Nutrition.monounsaturatedFats:
-        return MapEntry("monounsaturatedFats",
+        return MapEntry("MonounsaturatedFats",
             Colors.orangeAccent.shade200); // Complementary tone
 
       case Nutrition.polyunsaturatedFats:
         return MapEntry(
-            "polyunsaturatedFats", Colors.teal.shade400); // Cool and visible
+            "PolyunsaturatedFats", Colors.teal.shade400); // Cool and visible
 
       case Nutrition.transFats:
         return MapEntry(
-            "transFats", Colors.red.shade300); // Red signifies caution
+            "TransFats", Colors.red.shade300); // Red signifies caution
 
       case Nutrition.sugars:
         return MapEntry(
-            "sugars", Colors.pinkAccent.shade200); // Vibrant and energetic
+            "Sugars", Colors.pinkAccent.shade200); // Vibrant and energetic
 
       case Nutrition.fiber:
         return MapEntry(
-            "fiber", Colors.green.shade700); // Dark green for earthiness
+            "Fiber", Colors.green.shade700); // Dark green for earthiness
 
       case Nutrition.starch:
-        return MapEntry("starch", Colors.cyan.shade500); // Fresh and clean
+        return MapEntry("Starch", Colors.cyan.shade500); // Fresh and clean
 
       case Nutrition.carbohydrates:
         return MapEntry(
-            "carbohydrates", Colors.yellow.shade700); // Bright and noticeable
+            "Carbohydrates", Colors.yellow.shade700); // Bright and noticeable
 
       case Nutrition.cholesterol:
         return MapEntry(
-            "cholesterol", Colors.redAccent.shade100); // Light caution tone
+            "Cholesterol", Colors.redAccent.shade100); // Light caution tone
 
       case Nutrition.omega3:
         return MapEntry(
-            "omega3", Colors.blueAccent.shade700); // Rich oceanic blue
+            "Omega3", Colors.blueAccent.shade700); // Rich oceanic blue
 
       case Nutrition.omega6:
         return MapEntry(
-            "omega6", Colors.cyanAccent.shade400); // Vibrant aqua tone
+            "Omega6", Colors.cyanAccent.shade400); // Vibrant aqua tone
 
       case Nutrition.antioxidants:
-        return MapEntry("antioxidants",
+        return MapEntry("Antioxidants",
             Colors.purpleAccent.shade200); // Matches theme but distinguishable
 
       case Nutrition.aminoAcids:
         return MapEntry(
-            "aminoAcids", Colors.indigo.shade400); // Subtle yet contrasting
+            "AminoAcids", Colors.indigo.shade400); // Subtle yet contrasting
 
       case Nutrition.creatine:
         return MapEntry(
-            "creatine", Colors.blueAccent.shade100); // Light and clean
+            "Creatine", Colors.blueAccent.shade100); // Light and clean
 
       case Nutrition.phytosterols:
         return MapEntry(
-            "phytosterols", Colors.greenAccent.shade400); // Natural and vibrant
+            "Phytosterols", Colors.greenAccent.shade400); // Natural and vibrant
     }
   }
 }

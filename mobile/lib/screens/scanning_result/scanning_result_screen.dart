@@ -79,8 +79,15 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
         product = target;
 
         setState(() {
-          loading = false;
           goal = context.read<OnboardingCubit>().state.goal;
+        });
+
+        Future.delayed(Duration(milliseconds: 750)).then((_) {
+          if (mounted) {
+            setState(() {
+              loading = false;
+            });
+          }
         });
       } catch (e) {}
     }

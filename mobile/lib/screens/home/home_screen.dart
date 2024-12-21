@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bitescan/config/locator.dart';
 import 'package:bitescan/config/paths.dart';
@@ -11,9 +12,11 @@ import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
 import 'package:bitescan/screens/home/widgets/sessionsConfirmationButton.dart';
 import 'package:bitescan/screens/shopping_confirmation/shopping_confirmation_screen.dart';
 import 'package:bitescan/services/local_notification_service.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -60,157 +63,249 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 247, 229, 153),
-        ).copyWith(
-          onSurface: Colors.white,
-        ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 16, 24, 27),
-      ),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.transparent,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppLocalizations.of(context)?.title ?? "Title",
-                ),
-                BlocBuilder<OnboardingCubit, OnboardingState>(
-                    builder: (context, state) {
-                  if (state.goal == null) {
-                    return Text("Let's make food better");
-                  } else {
-                    return Text("Let's work on ${state.goal!.name}");
-                  }
-                }),
-              ],
-            ),
-            actions: [
-              SessionsconfirmationButton(),
-              SizedBox(width: 8),
-            ],
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(200),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 32,
-                    ),
-                    fillColor: Color.fromARGB(255, 30, 44, 49),
-                    filled: true,
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    Text("Category"),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {
-                        context
-                            .read<SystemConfigCubit>()
-                            .toggleLanguage(context);
-                      },
-                      child: Text(
-                        "See All",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.arrow_forward_ios_rounded),
-                      color: Theme.of(context).primaryColor,
-                    ),
+    return Builder(builder: (context) {
+      return Stack(
+        children: [
+          Container(
+            color: Color.alphaBlend(
+                const Color(0xff8D4DB1).withOpacity(0.09), Colors.white),
+            child: Align(
+              alignment: Alignment(1.05, -0.75),
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 35,
+                      spreadRadius: 20,
+                    )
                   ],
                 ),
               ),
-              SizedBox(height: 4),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: LayoutBuilder(
-                    builder: (_, constraints) => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: ["water", "cake", "meat", "fridge"]
-                              .map((item) => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: constraints.maxWidth * 0.19,
-                                        height: constraints.maxWidth * 0.19,
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Color.fromARGB(255, 30, 44, 49),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Center(
-                                          child: Image.asset(
-                                              "assets/categories/" +
-                                                  item +
-                                                  ".png"),
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      FittedBox(child: Text(item))
-                                    ],
-                                  ))
-                              .toList(),
-                        )),
-              ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Your Goal"),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GoalsPageView(
-                    setGoalIsOpen: (val) => setState(() {
-                      visibleGoalDetails = val;
-                    }),
-                  ),
+            ),
+          ),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              titleSpacing: 0,
+              leading: Center(
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.grey.shade500,
                 ),
               ),
-            ],
+              title: Text("BiteScan"),
+            ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                  child: Center(
+                    child: Text(
+                      "Motivation Qoat will \nhelp you keep going",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.itim(
+                        color: Colors.grey.shade500,
+                        fontSize: 23,
+                        height: 1.2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 25),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Future Progress",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 120,
+                  child: LineChart(
+                    LineChartData(
+                      minX: 2,
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      gridData: FlGridData(
+                        show: false,
+                      ),
+                      titlesData: FlTitlesData(
+                        show: false,
+                      ),
+                      minY: 0,
+                      lineTouchData: LineTouchData(
+                        enabled: false,
+                        touchTooltipData: LineTouchTooltipData(
+                          getTooltipColor: (spot) => Colors.black87,
+                          tooltipPadding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          tooltipBorder: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          tooltipRoundedRadius: 8,
+                          tooltipMargin: -24,
+                          tooltipHorizontalAlignment:
+                              FLHorizontalAlignment.right,
+                          getTooltipItems: (touchedSpots) {
+                            return touchedSpots
+                                .map((e) => LineTooltipItem(
+                                      "Now",
+                                      TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ))
+                                .toList();
+                          },
+                        ),
+                      ),
+                      showingTooltipIndicators: [
+                        ShowingTooltipIndicators([
+                          LineBarSpot(
+                            LineChartBarData(),
+                            0,
+                            FlSpot(3, 3.9),
+                          ),
+                        ]),
+                        ShowingTooltipIndicators([
+                          LineBarSpot(
+                            LineChartBarData(),
+                            1,
+                            FlSpot(7, 8.8),
+                          ),
+                        ])
+                      ],
+                      lineBarsData: [
+                        LineChartBarData(
+                          color: Colors.black,
+                          spots: [
+                            FlSpot(0, 2),
+                            FlSpot(1, 2.3),
+                            FlSpot(2, 3),
+                            FlSpot(3, 3.9),
+                            FlSpot(4, 4.1),
+                            FlSpot(5, 6),
+                            FlSpot(6, 6.5),
+                            FlSpot(7, 8.8),
+                            FlSpot(8, 9),
+                            FlSpot(9, 10),
+                          ],
+                          isCurved: true,
+                          barWidth: 2.5,
+                          isStrokeCapRound: true,
+                          dotData: FlDotData(
+                            checkToShowDot: (spot, barData) {
+                              return spot.y > 3 && spot.y < 5 ||
+                                  spot.y > 8 && spot.y < 9;
+                            },
+                          ),
+                          belowBarData: BarAreaData(
+                            gradient: LinearGradient(
+                              begin: Alignment(0, -3.5),
+                              end: Alignment(0.2, 1),
+                              stops: [0.5, 0.9],
+                              transform: GradientRotation(0),
+                              colors: [
+                                Colors.black26,
+                                Colors.transparent,
+                              ],
+                            ),
+                            show: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                    child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                          top: BorderSide(
+                        color: Colors.black12,
+                        width: 2,
+                      ))),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Your Goal",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: GoalsPageView(
+                                setGoalIsOpen: (val) => setState(() {
+                                  visibleGoalDetails = val;
+                                }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment(-0.95, -0.65),
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 60,
+                                spreadRadius: 5,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+              ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniCenterFloat,
+            floatingActionButton: !visibleGoalDetails
+                ? FloatingActionButton.extended(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    onPressed: () {
+                      context.push(Paths.scan.landing);
+                    },
+                    label: Text("Scan the Food"),
+                    icon: Icon(Icons.document_scanner_outlined),
+                  )
+                : null,
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: !visibleGoalDetails
-              ? FloatingActionButton.extended(
-                  onPressed: () {
-                    context.push(Paths.scan.landing);
-                  },
-                  label: Text("Scan the Food"),
-                  icon: Icon(Icons.document_scanner_outlined),
-                )
-              : null,
-        );
-      }),
-    );
+        ],
+      );
+    });
   }
 }
 
@@ -294,7 +389,7 @@ class _GoalsPageViewState extends State<GoalsPageView> {
               final val = 1 - indice.abs();
 
               return Opacity(
-                opacity: val,
+                opacity: min(1, val + 0.3),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: AspectRatio(
@@ -317,8 +412,8 @@ class _GoalsPageViewState extends State<GoalsPageView> {
                               BoxShadow(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.3),
-                                blurRadius: 12,
+                                    .withOpacity(0.2),
+                                blurRadius: 11,
                                 spreadRadius: 5,
                               ),
                           ],
@@ -334,15 +429,15 @@ class _GoalsPageViewState extends State<GoalsPageView> {
                                     goal: item,
                                   ),
                                   elevation: 8,
-                                  backgroundColor:
-                                      Color.fromARGB(255, 32, 48, 54),
+                                  backgroundColor: Colors.transparent,
                                 )
                                 .closed;
                             setState(() {
                               widget.setGoalIsOpen(false);
                             });
                           },
-                          child: Image.asset(item.picture),
+                          child:
+                              Image.asset("assets/energy.png"), //item.picture),
                         ),
                       ),
                     ),

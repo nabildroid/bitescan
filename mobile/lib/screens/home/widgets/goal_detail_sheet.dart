@@ -1,81 +1,138 @@
+import 'dart:ui';
+
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GoalDetailSheet extends StatelessWidget {
+class GoalDetailSheet extends StatefulWidget {
   final Goal goal;
-  const GoalDetailSheet({
+
+  GoalDetailSheet({
     super.key,
     required this.goal,
   });
 
   @override
+  State<GoalDetailSheet> createState() => _GoalDetailSheetState();
+}
+
+class _GoalDetailSheetState extends State<GoalDetailSheet> {
+  final background = ValueNotifier(Colors.grey.shade900.withOpacity(0.9));
+
+  @override
+  void initState() {
+    ColorScheme.fromImageProvider(provider: AssetImage(widget.goal.picture))
+        .then((v) {
+      background.value =
+          Color.alphaBlend(Colors.black54, v.secondary).withOpacity(0.86);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isSelected = context.watch<OnboardingCubit>().state.goal == goal;
+    final isSelected =
+        context.watch<OnboardingCubit>().state.goal == widget.goal;
 
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Container(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0).copyWith(
-              top: 40,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        body: ClipRRect(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(),
+            child: Stack(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      goal.picture,
-                      width: MediaQuery.of(context).size.width * .6,
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: GoalHighlight(
-                              icon: Icons.golf_course_sharp,
-                              label: "Category",
-                              value: goal.category,
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: GoalHighlight(
-                              icon: Icons.timer,
-                              label: "Duration",
-                              value: goal.duration,
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: GoalHighlight(
-                              icon: Icons.star,
-                              label: "Rating",
-                              value: goal.rating,
-                            )),
-                      ]),
-                    )
-                  ],
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                  child: ValueListenableBuilder(
+                      valueListenable: background,
+                      builder: (context, color, child) {
+                        return Container(
+                          color: color,
+                        );
+                      }),
                 ),
-                SizedBox(
-                  height: 16,
+                Padding(
+                  padding: const EdgeInsets.all(8.0).copyWith(
+                    top: 40,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white.withOpacity(1),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(26),
+                            ),
+                            child: Image.asset(
+                              widget.goal.picture,
+                              width: MediaQuery.of(context).size.width * .6,
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: GoalHighlight(
+                                        icon: Icons.golf_course_sharp,
+                                        label: "Category",
+                                        value: widget.goal.category,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: GoalHighlight(
+                                        icon: Icons.timer,
+                                        label: "Duration",
+                                        value: widget.goal.duration,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: GoalHighlight(
+                                        icon: Icons.star,
+                                        label: "Rating",
+                                        value: widget.goal.rating,
+                                      )),
+                                ]),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        widget.goal.longName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                      Divider(
+                        height: 20,
+                        color: Colors.white12,
+                      ),
+                      Text(
+                        widget.goal.description,
+                        style: TextStyle(color: Colors.white70, height: 2),
+                      )
+                    ],
+                  ),
                 ),
-                Text(
-                  goal.longName,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                Divider(
-                  height: 20,
-                  color: Colors.white12,
-                ),
-                Text(
-                  goal.description,
-                  style: TextStyle(color: Colors.white60, height: 2),
-                )
               ],
             ),
           ),
@@ -86,7 +143,7 @@ class GoalDetailSheet extends StatelessWidget {
             ? FloatingActionButton.extended(
                 onPressed: () {
                   HapticFeedback.selectionClick();
-                  context.read<OnboardingCubit>().setGoal(goal);
+                  context.read<OnboardingCubit>().setGoal(widget.goal);
                   Navigator.of(context).pop();
                 },
                 label: Text("Let's Start"),
@@ -147,13 +204,14 @@ class GoalHighlight extends StatelessWidget {
             Text(
               label,
               style:
-                  TextStyle(fontSize: 12, height: 0.6, color: Colors.white60),
+                  TextStyle(fontSize: 12, height: 0.6, color: Colors.white38),
             ),
             Text(
               value,
               style: TextStyle(
                 fontSize: 12,
                 height: 0.6,
+                color: Colors.white60,
               ),
             ),
           ],
