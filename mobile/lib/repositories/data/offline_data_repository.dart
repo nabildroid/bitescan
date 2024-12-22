@@ -1,9 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:convert';
+
 import 'package:bitescan/config/locator.dart';
 import 'package:bitescan/extentions/loggable.dart';
 import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
+import 'package:flutter/services.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
@@ -28,7 +31,16 @@ class OfflineDataRepository with Loggable {
 
     if (query.isEmpty) {
       // load from a file
-      return [];
+
+      logInfo("cache is Empty => Loading foods from assets");
+
+      final String data = await rootBundle.loadString('assets/data/foods.json');
+      final json = List<Map<String, dynamic>>.from(jsonDecode(data));
+
+      final assetFoods = json.map((e) => Food.fromJson(e)).toList();
+
+      await cacheFoods(assetFoods);
+      return assetFoods;
     }
 
     return query.map((e) => Food.fromJson(e.value)).toList();
@@ -64,8 +76,15 @@ class OfflineDataRepository with Loggable {
     final query = await _goalsStore.find(_db);
 
     if (query.isEmpty) {
-      // load from a file
-      return [];
+      logInfo("cache is Empty => Loading Goals from assets");
+
+      final String data = await rootBundle.loadString('assets/data/goals.json');
+      final json = List<Map<String, dynamic>>.from(jsonDecode(data));
+
+      final assetGoals = json.map((e) => Goal.fromJson(e)).toList();
+
+      await cacheGoals(assetGoals);
+      return assetGoals;
     }
 
     return query.map((e) => Goal.fromJson(e.value)).toList();

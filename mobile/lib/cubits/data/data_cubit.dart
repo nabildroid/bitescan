@@ -50,6 +50,8 @@ class DataCubit extends Cubit<DataState> with Loggable {
       return _offlineRepo.cacheFoods(
         diffFoodLists(old: state.foods, fresh: data),
       );
+    }).catchError((onError) {
+      logError("unable to load Foods from remote", error: onError);
     });
 
     final d2 = _repo.getGoals().then((data) {
@@ -58,6 +60,8 @@ class DataCubit extends Cubit<DataState> with Loggable {
       return _offlineRepo.cacheGoals(
         diffGoalLists(old: state.goals, fresh: data),
       );
+    }).catchError((onError) {
+      logError("unable to load Goals from remote", error: onError);
     });
 
     await Future.value([d1, d2]);
@@ -79,9 +83,11 @@ class DataCubit extends Cubit<DataState> with Loggable {
 }
 
 List<Food> diffFoodLists({required List<Food> old, required List<Food> fresh}) {
+  if (fresh.isEmpty) return old;
   return fresh;
 }
 
 List<Goal> diffGoalLists({required List<Goal> old, required List<Goal> fresh}) {
+  if (fresh.isEmpty) return old;
   return fresh;
 }
