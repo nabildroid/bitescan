@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:bitescan/cubits/system_config/system_config_cubit.dart';
+import 'package:bitescan/data_generator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
@@ -46,6 +48,10 @@ void logCurrentTiming() {
 }
 
 void main() async {
+  if (Platform.isLinux && !kReleaseMode) {
+    await assetsDataGenerator();
+  }
+
   initStarted = DateTime.now();
 
   WidgetsFlutterBinding.ensureInitialized();
