@@ -43,8 +43,6 @@ class SystemConfigCubit extends HydratedCubit<SystemConfigState> {
 
     //   // emit(state.copyWith(color: colors[Random().nextInt(colors.length)]));
     // });
-
-    emit(state.copyWith(locale: Locale("fr")));
   }
 
   void toggleLanguage(BuildContext context) {

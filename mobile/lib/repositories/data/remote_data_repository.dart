@@ -12,12 +12,12 @@ class RemoteDataRepository {
             Dio(
               BaseOptions(
                   baseUrl:
-                      "https://raw.githubusercontent.com/nabildroid/bitescan/main/mobile/assets/data/"),
+                      "https://raw.githubusercontent.com/nabildroid/bitescan/main/mobile/"),
             );
 
   Future<List<Food>> getFoods() async {
     final Response<dynamic> response = await _dio.get(
-      "foods.json",
+      "assets/data/foods.json",
     );
     final String data = response.data as String? ?? '';
 
@@ -28,12 +28,16 @@ class RemoteDataRepository {
 
   Future<List<Goal>> getGoals() async {
     final Response<dynamic> response = await _dio.get(
-      "goals.json",
+      "assets/data/goals.json",
     );
     final String data = response.data as String? ?? '';
 
     final json = List<Map<String, dynamic>>.from(jsonDecode(data));
 
     return json.map((e) => Goal.fromJson(e)).toList();
+  }
+
+  String createEndpoint(String path) {
+    return _dio.options.baseUrl + path;
   }
 }

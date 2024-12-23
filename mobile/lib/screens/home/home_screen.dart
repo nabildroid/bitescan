@@ -14,6 +14,7 @@ import 'package:bitescan/screens/home/widgets/sessionsConfirmationButton.dart';
 import 'package:bitescan/screens/shopping_confirmation/shopping_confirmation_screen.dart';
 import 'package:bitescan/services/local_notification_service.dart';
 import 'package:bitescan/utils/utils.dart';
+import 'package:bitescan/widgets/intelligent_image.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,11 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: Colors.grey.shade500,
                 ),
               ),
-              title: Text(
-                AppLocalizations.of(context)!.title,
-                style: isRTL(context)
-                    ? GoogleFonts.reemKufi()
-                    : GoogleFonts.kameron(),
+              title: GestureDetector(
+                onTap: () {
+                  context.read<SystemConfigCubit>().toggleLanguage(context);
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.title,
+                  style: isRTL(context)
+                      ? GoogleFonts.reemKufi()
+                      : GoogleFonts.kameron(),
+                ),
               ),
             ),
             body: Column(
@@ -358,8 +364,7 @@ class _GoalsPageViewState extends State<GoalsPageView> {
                               widget.setGoalIsOpen(false);
                             });
                           },
-                          child:
-                              Image.asset("assets/energy.png"), //item.picture),
+                          child: IntelligentImage(item.picture),
                         ),
                       ),
                     ),

@@ -2486,7 +2486,7 @@ const _goals = [
     longName: "Boost Energy|تعزيز الطاقة",
     description:
         "Prioritize complex carbohydrates, healthy fats, and lean protein for sustained energy. Limit sugars and processed foods to avoid energy crashes.|ركز على الكربوهيدرات المعقدة والدهون الصحية والبروتينات الخفيفة للحصول على طاقة مستدامة. قلل من السكريات والأطعمة المصنعة لتجنب انخفاض الطاقة.",
-    picture: "assets/energy.png",
+    picture: "assets/goals/energy.\$lang.png",
     duration: "1 month",
     category: "performance|الأداء",
     rating: "8 / 10",
@@ -2518,7 +2518,7 @@ const _goals = [
     longName: "Increase Focus|زيادة التركيز",
     description:
         "Focus on foods rich in omega-3s, antioxidants, and B vitamins to support brain health and cognitive function. Limit saturated fats and added sugars.|ركز على الأطعمة الغنية بأوميغا-3 ومضادات الأكسدة وفيتامينات ب لدعم صحة الدماغ والوظائف الإدراكية. قلل من الدهون المشبعة والسكريات المضافة.",
-    picture: "assets/focus.png",
+    picture: "assets/goals/focus.\$lang.png",
     duration: "1 month",
     category: "performance|الأداء",
     rating: "9 / 10",
@@ -2550,7 +2550,7 @@ const _goals = [
     longName: "Loose Weight|فقدان الوزن",
     description:
         "Prioritize lean protein, fiber, and complex carbs. Control portions and create a calorie deficit for effective weight management.|ركز على البروتينات الخفيفة والألياف والكربوهيدرات المعقدة. تحكم في الحصص وحقق عجزًا في السعرات الحرارية لإدارة الوزن بشكل فعال.",
-    picture: "assets/weight.png",
+    picture: "assets/goals/weight.\$lang.png",
     duration: "3 month",
     category: "Health|الصحة",
     rating: "7 / 10",
@@ -2575,5 +2575,116 @@ const _goals = [
           0.6, // Iron is often important during weight loss, especially for women.
     },
     maxPositiveCalories: 150, // Example: Adjust as needed.
+  ),
+  Goal(
+    name: "Digestion|الهضم",
+    id: "4",
+    longName: "Enhance Digestion|تحسين الهضم",
+    description:
+        "Focus on fiber-rich foods, probiotics, and adequate hydration to support digestive health. Limit processed foods and excess fats.|ركز على الأطعمة الغنية بالألياف والبروبيوتيك والترطيب الكافي لدعم صحة الجهاز الهضمي. قلل من الأطعمة المصنعة والدهون الزائدة.",
+    picture: "assets/goals/digestion.\$lang.png",
+    duration: "1 month",
+    category: "Health|الصحة",
+    rating: "8 / 10",
+    nutritionFactors: {
+      Nutrition.fiber: 0.7,
+      Nutrition.protein: 0.2,
+      Nutrition.fats: 0.1,
+    },
+    vetaminsFactors: {
+      Vetamins.b1: 0.6, // Supports digestive enzymes
+      Vetamins.b3: 0.5,
+      Vetamins.c: 0.4,
+      Vetamins.d: 0.4,
+    },
+    mineralsFactors: {
+      Minerals.magnesium: 0.5, // Supports bowel movements
+      Minerals.potassium: 0.4,
+    },
+    maxPositiveCalories: 200,
+  ),
+  Goal(
+    name: "Immunity|المناعة",
+    id: "5",
+    longName: "Boost Immunity|تعزيز المناعة",
+    description:
+        "Focus on vitamin C, zinc, and antioxidants. Consume a variety of fruits, vegetables, and lean proteins to strengthen your immune system.|ركز على فيتامين سي والزنك ومضادات الأكسدة. تناول مجموعة متنوعة من الفواكه والخضروات والبروتينات الخفيفة لتقوية جهاز المناعة.",
+    picture: "assets/goals/immunity.\$lang.png",
+    duration: "1 month",
+    category: "Health|الصحة",
+    rating: "9 / 10",
+    nutritionFactors: {
+      Nutrition.antioxidants: 0.8,
+      Nutrition.protein: 0.3,
+      Nutrition.sugars: 0.05,
+      Nutrition.fiber: 0.4,
+    },
+    vetaminsFactors: {
+      Vetamins.c: 0.9, // Crucial for immunity
+      Vetamins.d: 0.7,
+      Vetamins.e: 0.6,
+      Vetamins.b6: 0.5,
+    },
+    mineralsFactors: {
+      Minerals.zinc: 0.8, // Essential for immune function
+      Minerals.iron: 0.7,
+      Minerals.selenium: 0.6,
+    },
+    maxPositiveCalories: 250,
+  ),
+  Goal(
+    name: "Skin Care|العناية بالبشرة",
+    id: "6",
+    longName: "Improve Skin Health|تحسين صحة البشرة",
+    description:
+        "Include omega-3s, antioxidants, and vitamins A, C, and E for glowing skin. Avoid excessive sugar and processed foods.|قم بتضمين أوميغا-3 ومضادات الأكسدة والفيتامينات A و C و E للحصول على بشرة متألقة. تجنب السكريات الزائدة والأطعمة المصنعة.",
+    picture: "assets/goals/skin.\$lang.png",
+    duration: "2 months",
+    category: "Beauty|الجمال",
+    rating: "8 / 10",
+    nutritionFactors: {
+      Nutrition.omega3: 0.8,
+      Nutrition.antioxidants: 0.7,
+      Nutrition.sugars: 0.05,
+      Nutrition.fats: 0.2,
+    },
+    vetaminsFactors: {
+      Vetamins.a: 0.7, // Essential for skin repair
+      Vetamins.c: 0.8,
+      Vetamins.e: 0.8, // Protects against oxidative damage
+    },
+    mineralsFactors: {
+      Minerals.zinc: 0.6,
+      Minerals.selenium: 0.5,
+    },
+    maxPositiveCalories: 200,
+  ),
+  Goal(
+    name: "Sport|الرياضة",
+    id: "7",
+    longName: "Improve Performance|تحسين الأداء",
+    description:
+        "Focus on lean protein, omega-3s, and proper hydration for muscle recovery and energy. Balance with healthy fats and carbohydrates.|ركز على البروتينات الخفيفة وأوميغا-3 والترطيب الكافي لاستعادة العضلات والطاقة. قم بالموازنة مع الدهون الصحية والكربوهيدرات.",
+    picture: "assets/goals/sport.\$lang.png",
+    duration: "2 months",
+    category: "Performance|الأداء",
+    rating: "9 / 10",
+    nutritionFactors: {
+      Nutrition.protein: 0.7, // Crucial for muscle recovery
+      Nutrition.omega3: 0.6,
+      Nutrition.carbohydrates: 0.4,
+      Nutrition.fats: 0.3,
+    },
+    vetaminsFactors: {
+      Vetamins.b12: 0.8,
+      Vetamins.d: 0.7, // Supports bone health
+      Vetamins.c: 0.5,
+    },
+    mineralsFactors: {
+      Minerals.magnesium: 0.7, // Supports muscle function
+      Minerals.potassium: 0.5,
+      Minerals.iron: 0.6,
+    },
+    maxPositiveCalories: 300,
   ),
 ];

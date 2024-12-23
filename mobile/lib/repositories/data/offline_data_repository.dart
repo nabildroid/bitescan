@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bitescan/config/locator.dart';
 import 'package:bitescan/extentions/loggable.dart';
@@ -29,7 +30,7 @@ class OfflineDataRepository with Loggable {
   Future<List<Food>> getCachedFoods() async {
     final query = await _foodsStore.find(_db);
 
-    if (query.isEmpty) {
+    if (query.isEmpty || Platform.isLinux) {
       // load from a file
 
       logInfo("cache is Empty => Loading foods from assets");
@@ -75,7 +76,7 @@ class OfflineDataRepository with Loggable {
   Future<List<Goal>> getCachedGoals() async {
     final query = await _goalsStore.find(_db);
 
-    if (query.isEmpty) {
+    if (query.isEmpty || Platform.isLinux) {
       logInfo("cache is Empty => Loading Goals from assets");
 
       final String data = await rootBundle.loadString('assets/data/goals.json');

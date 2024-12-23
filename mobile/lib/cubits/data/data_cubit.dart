@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bitescan/config/locator.dart';
 import 'package:bitescan/cubits/data/data_state.dart';
 import 'package:bitescan/extentions/loggable.dart';
@@ -45,26 +47,28 @@ class DataCubit extends Cubit<DataState> with Loggable {
   }
 
   Future<void> remoteLoading() async {
-    final d1 = _repo.getFoods().then((data) {
-      emit(state.copyWith(foods: data));
-      return _offlineRepo.cacheFoods(
-        diffFoodLists(old: state.foods, fresh: data),
-      );
-    }).catchError((onError) {
-      logError("unable to load Foods from remote", error: onError);
-    });
+    if (!Platform.isLinux) {
+      final d1 = _repo.getFoods().then((data) {
+        emit(state.copyWith(foods: data));
+        return _offlineRepo.cacheFoods(
+          diffFoodLists(old: state.foods, fresh: data),
+        );
+      }).catchError((onError) {
+        logError("unable to load Foods from remote", error: onError);
+      });
 
-    final d2 = _repo.getGoals().then((data) {
-      emit(state.copyWith(goals: data));
+      final d2 = _repo.getGoals().then((data) {
+        emit(state.copyWith(goals: data));
 
-      return _offlineRepo.cacheGoals(
-        diffGoalLists(old: state.goals, fresh: data),
-      );
-    }).catchError((onError) {
-      logError("unable to load Goals from remote", error: onError);
-    });
+        return _offlineRepo.cacheGoals(
+          diffGoalLists(old: state.goals, fresh: data),
+        );
+      }).catchError((onError) {
+        logError("unable to load Goals from remote", error: onError);
+      });
 
-    await Future.value([d1, d2]);
+      await Future.value([d1, d2]);
+    }
   }
 
   @override

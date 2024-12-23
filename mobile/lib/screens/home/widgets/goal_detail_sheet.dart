@@ -4,6 +4,7 @@ import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
 import 'package:bitescan/extentions/translated_data.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/scanning_result/widgets/food_view.dart';
+import 'package:bitescan/widgets/intelligent_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,12 +26,18 @@ class _GoalDetailSheetState extends State<GoalDetailSheet> {
 
   @override
   void initState() {
-    ColorScheme.fromImageProvider(provider: AssetImage(widget.goal.picture))
-        .then((v) {
-      background.value =
-          Color.alphaBlend(Colors.black54, v.secondary).withOpacity(0.86);
-    });
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      if (!mounted) return;
+      IntelligentImage.getProvider(widget.goal.picture, context)
+          .then((provider) {
+        ColorScheme.fromImageProvider(provider: provider).then((v) {
+          background.value =
+              Color.alphaBlend(Colors.black54, v.secondary).withOpacity(0.86);
+        });
+      });
+    });
   }
 
   @override
@@ -70,18 +77,17 @@ class _GoalDetailSheetState extends State<GoalDetailSheet> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DecoratedBox(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.white.withOpacity(1),
-                                width: 2,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(1),
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(26),
                               ),
-                              borderRadius: BorderRadius.circular(26),
-                            ),
-                            child: Image.asset(
-                              widget.goal.picture,
-                              width: MediaQuery.of(context).size.width * .6,
-                            ),
-                          ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * .6,
+                                child: IntelligentImage(widget.goal.picture),
+                              )),
                           SizedBox(width: 20),
                           Expanded(
                             child: Column(
