@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:bitescan/cubits/onboarding/onboarding_cubit.dart';
+import 'package:bitescan/extentions/translated_data.dart';
 import 'package:bitescan/models/goal.dart';
+import 'package:bitescan/screens/scanning_result/widgets/food_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,7 +92,8 @@ class _GoalDetailSheetState extends State<GoalDetailSheet> {
                                       child: GoalHighlight(
                                         icon: Icons.golf_course_sharp,
                                         label: "Category",
-                                        value: widget.goal.category,
+                                        value: widget.goal
+                                            .translateCategory(context),
                                       )),
                                   Padding(
                                       padding: const EdgeInsets.only(bottom: 5),
@@ -114,7 +117,7 @@ class _GoalDetailSheetState extends State<GoalDetailSheet> {
                         height: 16,
                       ),
                       Text(
-                        widget.goal.longName,
+                        widget.goal.translateLongName(context),
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -127,7 +130,7 @@ class _GoalDetailSheetState extends State<GoalDetailSheet> {
                         color: Colors.white12,
                       ),
                       Text(
-                        widget.goal.description,
+                        widget.goal.translateDescription(context),
                         style: TextStyle(color: Colors.white70, height: 2),
                       )
                     ],

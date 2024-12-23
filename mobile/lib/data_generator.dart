@@ -2481,14 +2481,14 @@ final _foods = [
 
 const _goals = [
   Goal(
-    name: "Energy",
+    name: "Energy|طاقة",
     id: "1",
-    longName: "Boost Energy",
+    longName: "Boost Energy|تعزيز الطاقة",
     description:
-        "Prioritize complex carbohydrates, healthy fats, and lean protein for sustained energy. Limit sugars and processed foods to avoid energy crashes.",
+        "Prioritize complex carbohydrates, healthy fats, and lean protein for sustained energy. Limit sugars and processed foods to avoid energy crashes.|ركز على الكربوهيدرات المعقدة والدهون الصحية والبروتينات الخفيفة للحصول على طاقة مستدامة. قلل من السكريات والأطعمة المصنعة لتجنب انخفاض الطاقة.",
     picture: "assets/energy.png",
     duration: "1 month",
-    category: "performance",
+    category: "performance|الأداء",
     rating: "8 / 10",
     nutritionFactors: {
       Nutrition.carbohydrates: 0.5, // Moderate carbs
@@ -2513,15 +2513,14 @@ const _goals = [
     maxPositiveCalories: 250, // Example: Adjust as needed.
   ),
   Goal(
-    name: "Focus",
+    name: "Focus|تركيز",
     id: "2",
-
-    longName: "Increase Focus",
+    longName: "Increase Focus|زيادة التركيز",
     description:
-        "Focus on foods rich in omega-3s, antioxidants, and B vitamins to support brain health and cognitive function. Limit saturated fats and added sugars.",
+        "Focus on foods rich in omega-3s, antioxidants, and B vitamins to support brain health and cognitive function. Limit saturated fats and added sugars.|ركز على الأطعمة الغنية بأوميغا-3 ومضادات الأكسدة وفيتامينات ب لدعم صحة الدماغ والوظائف الإدراكية. قلل من الدهون المشبعة والسكريات المضافة.",
     picture: "assets/focus.png",
     duration: "1 month",
-    category: "performance",
+    category: "performance|الأداء",
     rating: "9 / 10",
     nutritionFactors: {
       Nutrition.omega3: 0.8, // Crucial for Brain function
@@ -2546,15 +2545,14 @@ const _goals = [
     maxPositiveCalories: 200, // Example: Adjust as needed.
   ),
   Goal(
-    name: "weight",
+    name: "weight|وزن",
     id: "3",
-
-    longName: "Loose Weight",
+    longName: "Loose Weight|فقدان الوزن",
     description:
-        "Prioritize lean protein, fiber, and complex carbs. Control portions and create a calorie deficit for effective weight management.",
+        "Prioritize lean protein, fiber, and complex carbs. Control portions and create a calorie deficit for effective weight management.|ركز على البروتينات الخفيفة والألياف والكربوهيدرات المعقدة. تحكم في الحصص وحقق عجزًا في السعرات الحرارية لإدارة الوزن بشكل فعال.",
     picture: "assets/weight.png",
     duration: "3 month",
-    category: "Health",
+    category: "Health|الصحة",
     rating: "7 / 10",
     nutritionFactors: {
       Nutrition.fiber: 0.6,

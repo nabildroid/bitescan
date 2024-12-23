@@ -5,6 +5,8 @@ import 'package:bitescan/models/food.dart';
 import 'package:bitescan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class FoodEvaluationDetails extends StatefulWidget {
   final Food food;
   const FoodEvaluationDetails({super.key, required this.food});
@@ -44,17 +46,17 @@ class _FoodEvaluationDetailsState extends State<FoodEvaluationDetails>
               color: Colors.white,
               radius: 3,
             ),
-            tabs: const [
+            tabs: [
               Tab(
-                text: "Nutrition",
+                text: AppLocalizations.of(context)!.result_nutrition,
                 height: 40,
               ),
               Tab(
-                text: "Calories",
+                text: AppLocalizations.of(context)!.result_calories,
                 height: 40,
               ),
               Tab(
-                text: "Score",
+                text: AppLocalizations.of(context)!.result_score,
                 height: 40,
               ),
             ]),

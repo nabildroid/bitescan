@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 double smoothValue(List<double> data, double target) {
   if (data.isEmpty) return 100;
   // Step 1: Find the min and max values in the provided data
@@ -32,4 +34,8 @@ DateTime dateHoursFromNow(int hours) {
         (now.hour >= hours ? 1 : 0), // Add 1 day if the target is tomorrow
     hours,
   );
+}
+
+bool isRTL(BuildContext context) {
+  return Directionality.of(context) == TextDirection.rtl;
 }

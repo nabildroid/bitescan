@@ -14,6 +14,8 @@ import 'package:rxdart/rxdart.dart';
 
 import 'widgets/food_view.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ScanningResultScreen extends StatefulWidget {
   final String code;
   const ScanningResultScreen({required this.code, super.key});
@@ -82,7 +84,7 @@ class _ScanningResultScreenState extends State<ScanningResultScreen> {
           goal = context.read<OnboardingCubit>().state.goal;
         });
 
-        Future.delayed(Duration(milliseconds: 750)).then((_) {
+        Future.delayed(Duration(milliseconds: 100)).then((_) {
           if (mounted) {
             setState(() {
               loading = false;

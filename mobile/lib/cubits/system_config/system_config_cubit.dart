@@ -32,17 +32,19 @@ class SystemConfigState extends Equatable {
 class SystemConfigCubit extends HydratedCubit<SystemConfigState> {
   SystemConfigCubit(Color mainColor)
       : super(SystemConfigState(mainColor: mainColor)) {
-    Timer.periodic(Duration(seconds: 1), (_) {
-      final colors = [
-        mainColor,
-        Colors.red,
-        Colors.yellow,
-        Colors.green,
-        Colors.black
-      ];
+    // Timer.periodic(Duration(seconds: 1), (_) {
+    //   final colors = [
+    //     mainColor,
+    //     Colors.red,
+    //     Colors.yellow,
+    //     Colors.green,
+    //     Colors.black
+    //   ];
 
-      // emit(state.copyWith(color: colors[Random().nextInt(colors.length)]));
-    });
+    //   // emit(state.copyWith(color: colors[Random().nextInt(colors.length)]));
+    // });
+
+    emit(state.copyWith(locale: Locale("fr")));
   }
 
   void toggleLanguage(BuildContext context) {

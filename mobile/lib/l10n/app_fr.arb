@@ -1,9 +1,22 @@
 {
   "@@locale": "fr",
-  "title": "Welcome",
-  "@title": {
-    "description": "Title for the Demo App",
-    "type": "text",
-    "placeholders": {}
-  }
+  "title": "BiteScan",
+  "home_progress_label": "Future Progress",
+  "home_goal_label": "Your goal",
+  "home_cta": "Scan the food",
+  "home_qoat": "French is an easy to understand language \n but complex",
+  "scan_title1": "Unlock Your Food's Secrets",
+  "scan_title2": "Scan. Discover. Achieve.",
+  "scan_title3": "See Food Fit Faster",
+  "scan_title4": "Goal: Met? Scan Now!",
+  "scan_title5": "The Truth, Scanned Here",
+  "scan_title6": "Scan: Your Goal Awaits",
+  "scanning_or_scan_bellow": "Or scan bellow",
+  "resut_other_alternatives": "Other alternatives",
+  "resut_good_for": "Good For",
+  "resut_ok_for": "Ok For",
+  "resut_bad_for": "Bad For",
+  "result_nutrition": "Nutrition",
+  "result_calories": "Calories",
+  "result_score": "Score"
 }

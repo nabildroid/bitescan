@@ -1,3 +1,4 @@
+import 'package:bitescan/extentions/translated_data.dart';
 import 'package:bitescan/main.dart';
 import 'package:bitescan/models/food.dart';
 import 'package:bitescan/models/goal.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'food_evaluation_details.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FoodView extends StatelessWidget {
   final Food? food;
@@ -42,6 +45,14 @@ class FoodView extends StatelessWidget {
         : score < 70
             ? const Color(0xffFFCA3A)
             : const Color(0xff8AC926);
+
+    final feedback = (score < 20
+            ? AppLocalizations.of(context)!.resut_bad_for
+            : score < 70
+                ? AppLocalizations.of(context)!.resut_ok_for
+                : AppLocalizations.of(context)!.resut_good_for) +
+        (isRTL(context) ? "" : " ") +
+        (goal?.translateName(context) ?? "Health");
 
     return Column(
       children: [
@@ -80,7 +91,7 @@ class FoodView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        food?.name ?? "Product Name",
+                        food?.translateName(context) ?? "Product Name",
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium!
@@ -154,7 +165,7 @@ class FoodView extends StatelessWidget {
                             )),
                             child: FittedBox(
                               child: Text(
-                                "${score < 20 ? "Bad" : score < 70 ? "Ok" : "Good"} For ${goal?.name}",
+                                feedback,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -193,7 +204,7 @@ class FoodView extends StatelessWidget {
                 children: [
                   SizedBox(height: 16),
                   Text(
-                    "Other Alternatives",
+                    AppLocalizations.of(context)!.resut_other_alternatives,
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
@@ -229,7 +240,7 @@ class FoodView extends StatelessWidget {
                           child: Image.network(food.image),
                         ),
                         title: Text(
-                          food.name,
+                          food.translateName(context),
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                           ),

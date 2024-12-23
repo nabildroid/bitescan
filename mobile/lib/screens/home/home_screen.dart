@@ -9,9 +9,11 @@ import 'package:bitescan/cubits/onboarding/onboarding_state.dart';
 import 'package:bitescan/cubits/system_config/system_config_cubit.dart';
 import 'package:bitescan/models/goal.dart';
 import 'package:bitescan/screens/home/widgets/goal_detail_sheet.dart';
+import 'package:bitescan/screens/home/widgets/progress_chart.dart';
 import 'package:bitescan/screens/home/widgets/sessionsConfirmationButton.dart';
 import 'package:bitescan/screens/shopping_confirmation/shopping_confirmation_screen.dart';
 import 'package:bitescan/services/local_notification_service.dart';
+import 'package:bitescan/utils/utils.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Color.alphaBlend(
                 const Color(0xff8D4DB1).withOpacity(0.09), Colors.white),
             child: Align(
-              alignment: Alignment(1.05, -0.75),
+              alignment: isRTL(context)
+                  ? Alignment(-1.05, -0.75)
+                  : Alignment(1.05, -0.75),
               child: Container(
                 width: 50,
                 height: 50,
@@ -98,7 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: Colors.grey.shade500,
                 ),
               ),
-              title: Text("BiteScan"),
+              title: Text(
+                AppLocalizations.of(context)!.title,
+                style: isRTL(context)
+                    ? GoogleFonts.reemKufi()
+                    : GoogleFonts.kameron(),
+              ),
             ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,14 +116,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: Center(
                     child: Text(
-                      "Motivation Qoat will \nhelp you keep going",
+                      AppLocalizations.of(context)!.home_qoat,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.itim(
-                        color: Colors.grey.shade500,
-                        fontSize: 23,
-                        height: 1.2,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: isRTL(context)
+                          ? GoogleFonts.harmattan(
+                              color: Colors.grey.shade400,
+                              fontSize: 28,
+                              height: 1,
+                              fontWeight: FontWeight.w600,
+                            )
+                          : GoogleFonts.itim(
+                              color: Colors.grey.shade500,
+                              fontSize: 23,
+                              height: 1.2,
+                              fontWeight: FontWeight.w500,
+                            ),
                     ),
                   ),
                 ),
@@ -122,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Future Progress",
+                    AppLocalizations.of(context)!.home_progress_label,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -132,103 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(
                   height: 120,
-                  child: LineChart(
-                    LineChartData(
-                      minX: 2,
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      gridData: FlGridData(
-                        show: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        show: false,
-                      ),
-                      minY: 0,
-                      lineTouchData: LineTouchData(
-                        enabled: false,
-                        touchTooltipData: LineTouchTooltipData(
-                          getTooltipColor: (spot) => Colors.black87,
-                          tooltipPadding:
-                              EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                          tooltipBorder: BorderSide(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                          tooltipRoundedRadius: 8,
-                          tooltipMargin: -24,
-                          tooltipHorizontalAlignment:
-                              FLHorizontalAlignment.right,
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots
-                                .map((e) => LineTooltipItem(
-                                      "Now",
-                                      TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                      ),
-                                    ))
-                                .toList();
-                          },
-                        ),
-                      ),
-                      showingTooltipIndicators: [
-                        ShowingTooltipIndicators([
-                          LineBarSpot(
-                            LineChartBarData(),
-                            0,
-                            FlSpot(3, 3.9),
-                          ),
-                        ]),
-                        ShowingTooltipIndicators([
-                          LineBarSpot(
-                            LineChartBarData(),
-                            1,
-                            FlSpot(7, 8.8),
-                          ),
-                        ])
-                      ],
-                      lineBarsData: [
-                        LineChartBarData(
-                          color: Colors.black,
-                          spots: [
-                            FlSpot(0, 2),
-                            FlSpot(1, 2.3),
-                            FlSpot(2, 3),
-                            FlSpot(3, 3.9),
-                            FlSpot(4, 4.1),
-                            FlSpot(5, 6),
-                            FlSpot(6, 6.5),
-                            FlSpot(7, 8.8),
-                            FlSpot(8, 9),
-                            FlSpot(9, 10),
-                          ],
-                          isCurved: true,
-                          barWidth: 2.5,
-                          isStrokeCapRound: true,
-                          dotData: FlDotData(
-                            checkToShowDot: (spot, barData) {
-                              return spot.y > 3 && spot.y < 5 ||
-                                  spot.y > 8 && spot.y < 9;
-                            },
-                          ),
-                          belowBarData: BarAreaData(
-                            gradient: LinearGradient(
-                              begin: Alignment(0, -3.5),
-                              end: Alignment(0.2, 1),
-                              stops: [0.5, 0.9],
-                              transform: GradientRotation(0),
-                              colors: [
-                                Colors.black26,
-                                Colors.transparent,
-                              ],
-                            ),
-                            show: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: ProgressChart(),
                 ),
                 Expanded(
                     child: Container(
@@ -247,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Your Goal",
+                              AppLocalizations.of(context)!.home_goal_label,
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -268,7 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Align(
-                        alignment: Alignment(-0.95, -0.65),
+                        alignment: isRTL(context)
+                            ? Alignment(0.95, -0.65)
+                            : Alignment(-0.95, -0.65),
                         child: Container(
                           width: 80,
                           height: 80,
@@ -298,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       context.push(Paths.scan.landing);
                     },
-                    label: Text("Scan the Food"),
+                    label: Text(AppLocalizations.of(context)!.home_cta),
                     icon: Icon(Icons.document_scanner_outlined),
                   )
                 : null,

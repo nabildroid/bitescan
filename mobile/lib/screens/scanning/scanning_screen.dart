@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:bitescan/config/custom_router.dart';
 import 'package:bitescan/config/paths.dart';
 import 'package:bitescan/cubits/data/data_cubit.dart';
 import 'package:bitescan/cubits/data/data_state.dart';
 import 'package:bitescan/cubits/scanning/scanning_cubit.dart';
 import 'package:bitescan/extentions/loggable.dart';
-import 'package:bitescan/models/food.dart';
-import 'package:bitescan/screens/scanning_result/scanning_result_screen.dart';
+import 'package:bitescan/extentions/translated_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,18 +16,19 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScanningScreen extends StatefulWidget {
   ScanningScreen({super.key});
 
-  static get title {
-    const examples = [
-      "Unlock Your Food's Secrets",
-      "Scan. Discover. Achieve.",
-      "See Food Fit Faster",
-      "Goal: Met? Scan Now!",
-      "The Truth, Scanned Here",
-      "Scan: Your Goal Awaits"
+  static String _title(BuildContext context) {
+    final examples = [
+      AppLocalizations.of(context)!.scan_title1,
+      AppLocalizations.of(context)!.scan_title2,
+      AppLocalizations.of(context)!.scan_title3,
+      AppLocalizations.of(context)!.scan_title4,
+      AppLocalizations.of(context)!.scan_title5,
+      AppLocalizations.of(context)!.scan_title6,
     ];
 
     return examples[Random().nextInt(examples.length)];
@@ -146,7 +145,7 @@ class _ScanningScreenState extends State<ScanningScreen>
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: FittedBox(
             child: Text(
-          ScanningScreen.title,
+          ScanningScreen._title(context),
           style: TextStyle(
             shadows: [
               Shadow(
@@ -236,7 +235,7 @@ class _ScanningScreenState extends State<ScanningScreen>
                 children: [
                   SizedBox(height: 10),
                   Text(
-                    "Or Select Bellow",
+                    AppLocalizations.of(context)!.scanning_or_scan_bellow,
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
@@ -272,7 +271,7 @@ class _ScanningScreenState extends State<ScanningScreen>
                           child: Image.network(state.foods[index].image),
                         ),
                         title: Text(
-                          state.foods[index].name,
+                          state.foods[index].translateName(context),
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                           ),

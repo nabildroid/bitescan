@@ -148,9 +148,13 @@ class BitescanApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: config.mainColor),
             useMaterial3: true,
-            textTheme: GoogleFonts.loraTextTheme(
-              Theme.of(context).textTheme,
-            ),
+            textTheme: config.locale?.languageCode == "ar"
+                ? GoogleFonts.notoNaskhArabicTextTheme(
+                    Theme.of(context).textTheme,
+                  )
+                : GoogleFonts.loraTextTheme(
+                    Theme.of(context).textTheme,
+                  ),
           ),
           debugShowCheckedModeBanner: false,
           routerConfig: router,

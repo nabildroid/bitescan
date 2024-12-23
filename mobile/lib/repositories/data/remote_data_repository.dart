@@ -12,7 +12,7 @@ class RemoteDataRepository {
             Dio(
               BaseOptions(
                   baseUrl:
-                      "https://raw.githubusercontent.com/nabildroid/bitescan/refs/heads/main/mobile/assets/data/"),
+                      "https://raw.githubusercontent.com/nabildroid/bitescan/main/mobile/assets/data/"),
             );
 
   Future<List<Food>> getFoods() async {

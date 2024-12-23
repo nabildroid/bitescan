@@ -1,9 +1,22 @@
 {
   "@@locale": "ar",
-  "title": "مرحبا",
-  "@title": {
-    "description": "Title for the Demo App",
-    "type": "text",
-    "placeholders": {}
-  }
+  "title": "بايت سكان",
+  "home_progress_label": "التقدم المستقبلي",
+  "home_goal_label": "هدفك",
+  "home_cta": "مسح الطعام",
+  "home_qoat": "الفرنسية هي لغة سهلة الفهم \n ولكن معقدة",
+  "scan_title1": "اكشف أسرار طعامك",
+  "scan_title2": "امسح. اكتشف. حقق.",
+  "scan_title3": "شاهد الطعام بطريقة أسرع",
+  "scan_title4": "حقق هدفك؟ امسح الآن!",
+  "scan_title5": "الحقيقة هنا: امسح لتعرف",
+  "scan_title6": "امسح: هدفك بانتظارك",
+  "scanning_or_scan_bellow": "أو امسح أدناه",
+  "resut_other_alternatives": "بدائل أخرى",
+  "resut_good_for": "جيد لـ",
+  "resut_ok_for": "مقبول لـ",
+  "resut_bad_for": "سيئ لـ",
+  "result_nutrition": "التغذية",
+  "result_calories": "السعرات الحرارية",
+  "result_score": "النتيجة"
 }
